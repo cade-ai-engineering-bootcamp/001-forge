@@ -67,3 +67,44 @@ Begin Feature 1.1 — Add licensing, changelog, initial README, and repository
 hygiene. Do not begin Feature 1.2 in the same scope unless it is separately
 approved.
 
+## 2026-08-09 — Feature 1.1: Repository Foundation
+
+### Session Goal
+
+Establish the repository's public-facing metadata and hygiene without creating
+the Python package scheduled for Feature 1.2.
+
+### Feature Completed
+
+- Feature 1.1 — Added licensing, changelog, initial README, and repository
+  hygiene.
+
+### Work Completed
+
+- Added the standard MIT license with the project owner's copyright.
+- Added an unreleased changelog that records the foundation built so far.
+- Documented Forge's purpose, boundaries, prerequisites, reproducible setup,
+  current repository layout, project records, and development status.
+- Added narrow ignore rules for local editor files and runtime logs.
+- Kept future package, quality, API, container, and CI capabilities clearly
+  identified as planned rather than available.
+
+### Validation Performed
+
+- Re-synchronized the environment from the unchanged lockfile using frozen
+  mode.
+- Confirmed the managed environment still uses Python 3.14.7.
+- Confirmed local environments, secrets, logs, and editor artifacts are
+  ignored while `.env.example` remains trackable.
+- Confirmed the patch has no whitespace errors.
+
+### Scope Notes
+
+- No Python source package or packaging configuration was introduced.
+- No dependency declarations or resolved versions were changed.
+- No work from Feature 1.2 or later was started.
+
+### Next Starting Point
+
+Begin Feature 1.2 — Create the minimal `src/forge` package and enable project
+packaging. Do not begin it without separate approval.
