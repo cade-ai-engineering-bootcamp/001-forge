@@ -20,5 +20,13 @@ htmlcov/
 build/
 dist/
 
+# Local editor files
+.idea/
+*.swp
+*~
+
+# Runtime logs
+*.log
+
 # Operating-system files
 .DS_Store

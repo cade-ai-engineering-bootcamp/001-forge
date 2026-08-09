@@ -161,3 +161,74 @@ Definitions of Done to keep delivery predictable.
 - Keep diffs aligned with acceptance criteria.
 - Stop for review at the declared boundary.
 
+## Distribution Names, Import Packages, and the `src/` Layout
+
+### Simple Explanation
+
+A distribution name identifies an installable project to packaging tools,
+while an import-package name identifies the module used in Python code. Forge's
+distribution is `forge-ai-starter-kit`, while its Python import is `forge`.
+
+The `src/` layout places that import package under `src/forge` rather than in
+the repository root.
+
+### Why It Exists
+
+Separating installable source from repository files prevents Python from
+finding a local module merely because the current directory happens to contain
+it. Successful imports must come through the configured package installation.
+
+### Professional Use
+
+Libraries and service repositories use build backends to turn source trees
+into installable distributions. Editable local installations preserve that
+packaging behavior while allowing source changes to appear immediately during
+development.
+
+### Common Mistakes
+
+- Assuming the repository, distribution, and import names must match
+- Importing directly from the repository root without testing installation
+- Adding `src` to `PYTHONPATH` to hide broken packaging
+- Duplicating the project version manually inside `__init__.py`
+
+### Best Practices
+
+- Configure the build backend explicitly.
+- Map nonmatching distribution and import names deliberately.
+- Keep `__init__.py` small until a public package API is required.
+- Test imports from an installed environment outside the repository root.
+
+## Editable and Non-Editable Installations
+
+### Simple Explanation
+
+An editable installation connects the environment to the working source tree,
+so code changes are immediately visible. A non-editable installation places
+the built package in the environment's `site-packages`, matching deployment
+behavior more closely.
+
+### Why It Exists
+
+Editable installs make development fast, while non-editable installs prove the
+package can stand on its built artifact rather than local repository behavior.
+
+### Professional Use
+
+Developers commonly use editable installations locally and non-editable
+installations in deployment images or release validation. Testing both reduces
+the chance that packaging omissions reach production.
+
+### Common Mistakes
+
+- Treating an import from an existing development environment as clean proof
+- Relying on the repository root or a manual `PYTHONPATH`
+- Testing with stale installed files from an earlier build
+- Confirming the import name without checking distribution metadata
+
+### Best Practices
+
+- Start clean-install validation with a new checkout and environment.
+- Use frozen synchronization so validation cannot rewrite the lockfile.
+- Run the installed interpreter outside the checkout with `PYTHONPATH` unset.
+- Confirm the imported file lives in the expected environment.
