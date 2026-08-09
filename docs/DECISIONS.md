@@ -17,7 +17,8 @@ starter kit Forge.
 ### Decision
 
 Use `cade-ai-engineering-bootcamp/001-forge` as the repository identifier and
-Forge as the human-facing product name.
+Forge as the human-facing product name. Use `forge-ai-starter-kit` as the
+Python distribution name and `forge` as the import-package name.
 
 ### Alternatives Considered
 
@@ -28,7 +29,8 @@ Forge as the human-facing product name.
 
 - The bootcamp sequence remains visible on GitHub.
 - Documentation must distinguish repository identifiers from product names.
-- Python distribution and import-package names are separate decisions.
+- Packaging configuration must explicitly map the distribution to the shorter
+  import-package name.
 
 ## Decision 002 — Use a Small Modular Monolith
 
@@ -169,4 +171,3 @@ boundary even when time remains.
 - Diffs remain focused and easier to understand.
 - Each design decision receives deliberate review.
 - Progress may feel slower, but comprehension and maintainability improve.
-

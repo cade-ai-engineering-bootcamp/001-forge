@@ -108,3 +108,48 @@ the Python package scheduled for Feature 1.2.
 
 Begin Feature 1.2 — Create the minimal `src/forge` package and enable project
 packaging. Do not begin it without separate approval.
+
+## 2026-08-09 — Feature 1.2: Minimal Python Package
+
+### Session Goal
+
+Create the smallest installable `forge` package and enable project packaging
+without introducing application behavior or completing the clean-room import
+proof scheduled for Feature 1.3.
+
+### Feature Completed
+
+- Feature 1.2 — Created the minimal `src/forge` package and enabled project
+  packaging.
+
+### Work Completed
+
+- Added `src/forge/__init__.py` with a package docstring and no public behavior.
+- Configured the version-compatible uv build backend.
+- Explicitly mapped the `forge-ai-starter-kit` distribution to the `forge`
+  import package.
+- Connected the README and MIT license to the package metadata.
+- Updated package-layout documentation and learning records.
+- Refreshed the lockfile's root-project source from virtual to editable.
+
+### Validation Performed
+
+- Confirmed the lockfile remains current after enabling packaging.
+- Confirmed frozen synchronization builds and installs the project.
+- Confirmed Python compiles the package source.
+- Built both the wheel and source distribution in a temporary directory.
+- Confirmed the build artifacts use the distribution name and contain the
+  intended `forge` package.
+- Confirmed no runtime or development dependency versions changed.
+
+### Scope Notes
+
+- No package functions, command-line interface, API, or application modules
+  were added.
+- No `PYTHONPATH` override or clean-room import proof was performed.
+- Feature 1.3 remains separately gated.
+
+### Next Starting Point
+
+Begin Feature 1.3 — Prove clean installation and package import through uv. Do
+not begin it without separate approval.

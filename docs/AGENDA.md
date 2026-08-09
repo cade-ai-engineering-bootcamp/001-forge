@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 16% (5 of 31 features complete)
+- **Overall progress:** 19% (6 of 31 features complete)
 - **Completed steps:** Step 0 — Planning and Governance
 - **Current step:** Step 1 — Python Project Foundation
-- **Current feature:** Feature 1.2 — Create the minimal `src/forge` package and enable project packaging
-- **Estimated remaining focused time:** Approximately 9 hours
+- **Current feature:** Feature 1.3 — Prove clean installation and package import through uv
+- **Estimated remaining focused time:** Approximately 8 hours 45 minutes
 
 ## Completed Work
 
@@ -31,6 +31,7 @@ specific AI or business logic.
 - [x] Materialized the approved project agenda in this file.
 - [x] Initialized the project journal, decision record, and learning record.
 - [x] Added licensing, changelog, initial README, and repository hygiene.
+- [x] Created the minimal `src/forge` package and enabled project packaging.
 
 ## Remaining Work
 
@@ -248,7 +249,7 @@ same inside and outside its repository.
 ### Features
 
 - [x] **1.1** Add licensing, changelog, initial README, and repository hygiene.
-- [ ] **1.2** Create the minimal `src/forge` package and enable project packaging.
+- [x] **1.2** Create the minimal `src/forge` package and enable project packaging.
 - [ ] **1.3** Prove clean installation and package import through uv.
 
 ### Learning Objectives

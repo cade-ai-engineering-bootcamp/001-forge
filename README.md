@@ -7,8 +7,9 @@ business logic.
 
 > [!NOTE]
 > Forge is under active development. The reproducible environment and project
-> governance are available now; the installable Python package, quality gates,
-> API, container support, and continuous integration are planned work.
+> governance are available now, along with the minimal installable `forge`
+> package. Quality gates, the API, container support, and continuous
+> integration are planned work.
 
 ## Project Goals
 
@@ -77,6 +78,8 @@ deactivate
 ```text
 .
 ├── docs/               # Agenda, journal, decisions, and learning records
+├── src/
+│   └── forge/           # Installable Python import package
 ├── .python-version     # Required Python interpreter version
 ├── CHANGELOG.md        # Notable project changes
 ├── LICENSE             # MIT license
@@ -84,8 +87,10 @@ deactivate
 └── uv.lock             # Exact resolved dependency graph
 ```
 
-The `src/forge` package will be introduced in the next project-foundation
-feature. Packaging is intentionally disabled until that package exists.
+`forge-ai-starter-kit` is the distribution name recorded in project metadata;
+`forge` is the shorter name used by Python imports. The `src/` layout keeps
+importable code separate from repository-level files and requires the project
+to be installed before it can be imported reliably.
 
 ## Project Documentation
 
