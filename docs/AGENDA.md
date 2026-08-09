@@ -16,10 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 10% (3 of 31 features complete)
-- **Current step:** Step 0 — Planning and Governance
-- **Current feature:** Feature 0.4 — Initialize governance and learning records
-- **Estimated remaining focused time:** Approximately 10 hours
+- **Overall progress:** 13% (4 of 31 features complete)
+- **Completed steps:** Step 0 — Planning and Governance
+- **Current step:** Step 1 — Python Project Foundation
+- **Current feature:** Feature 1.1 — Add licensing, changelog, initial README, and repository hygiene
+- **Estimated remaining focused time:** Approximately 9.5 hours
 
 ## Completed Work
 
@@ -28,10 +29,10 @@ specific AI or business logic.
 - [x] Installed uv 0.12.3 and uv-managed Python 3.14.7.
 - [x] Created and verified the locked `.venv` environment.
 - [x] Materialized the approved project agenda in this file.
+- [x] Initialized the project journal, decision record, and learning record.
 
 ## Remaining Work
 
-- [ ] Complete the remaining Step 0 governance records.
 - [ ] Complete Steps 1–9 and the graduation review.
 - [ ] Verify all local, container, and CI quality gates.
 - [ ] Demonstrate that a new project can start from Forge in under 10 minutes.
@@ -184,7 +185,7 @@ the reasoning behind the repository.
 - [x] **0.1** Approve the project scope, architecture, stack, and agenda.
 - [x] **0.2** Bootstrap and verify the reproducible Python environment.
 - [x] **0.3** Create `docs/AGENDA.md` with scope guardrails.
-- [ ] **0.4** Initialize the journal, decisions, and learning records.
+- [x] **0.4** Initialize the journal, decisions, and learning records.
 
 ### Learning Objectives
 
