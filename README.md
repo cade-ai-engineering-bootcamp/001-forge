@@ -67,6 +67,12 @@ uv --version
 python --version
 ```
 
+Verify the installed package:
+
+```bash
+uv run python -c "import forge; print(forge.__file__)"
+```
+
 When finished, leave the virtual environment with:
 
 ```bash

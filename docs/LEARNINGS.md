@@ -198,3 +198,37 @@ development.
 - Map nonmatching distribution and import names deliberately.
 - Keep `__init__.py` small until a public package API is required.
 - Test imports from an installed environment outside the repository root.
+
+## Editable and Non-Editable Installations
+
+### Simple Explanation
+
+An editable installation connects the environment to the working source tree,
+so code changes are immediately visible. A non-editable installation places
+the built package in the environment's `site-packages`, matching deployment
+behavior more closely.
+
+### Why It Exists
+
+Editable installs make development fast, while non-editable installs prove the
+package can stand on its built artifact rather than local repository behavior.
+
+### Professional Use
+
+Developers commonly use editable installations locally and non-editable
+installations in deployment images or release validation. Testing both reduces
+the chance that packaging omissions reach production.
+
+### Common Mistakes
+
+- Treating an import from an existing development environment as clean proof
+- Relying on the repository root or a manual `PYTHONPATH`
+- Testing with stale installed files from an earlier build
+- Confirming the import name without checking distribution metadata
+
+### Best Practices
+
+- Start clean-install validation with a new checkout and environment.
+- Use frozen synchronization so validation cannot rewrite the lockfile.
+- Run the installed interpreter outside the checkout with `PYTHONPATH` unset.
+- Confirm the imported file lives in the expected environment.

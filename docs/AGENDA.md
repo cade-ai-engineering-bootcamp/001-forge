@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 19% (6 of 31 features complete)
-- **Completed steps:** Step 0 — Planning and Governance
-- **Current step:** Step 1 — Python Project Foundation
-- **Current feature:** Feature 1.3 — Prove clean installation and package import through uv
-- **Estimated remaining focused time:** Approximately 8 hours 45 minutes
+- **Overall progress:** 23% (7 of 31 features complete)
+- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation
+- **Current step:** Step 2 — Local Quality and Test Harness
+- **Current feature:** Feature 2.1 — Configure Black and Ruff with compatible responsibilities
+- **Estimated remaining focused time:** Approximately 8 hours 30 minutes
 
 ## Completed Work
 
@@ -32,10 +32,11 @@ specific AI or business logic.
 - [x] Initialized the project journal, decision record, and learning record.
 - [x] Added licensing, changelog, initial README, and repository hygiene.
 - [x] Created the minimal `src/forge` package and enabled project packaging.
+- [x] Proved clean installation and package import through uv.
 
 ## Remaining Work
 
-- [ ] Complete Steps 1–9 and the graduation review.
+- [ ] Complete Steps 2–9 and the graduation review.
 - [ ] Verify all local, container, and CI quality gates.
 - [ ] Demonstrate that a new project can start from Forge in under 10 minutes.
 
@@ -250,7 +251,7 @@ same inside and outside its repository.
 
 - [x] **1.1** Add licensing, changelog, initial README, and repository hygiene.
 - [x] **1.2** Create the minimal `src/forge` package and enable project packaging.
-- [ ] **1.3** Prove clean installation and package import through uv.
+- [x] **1.3** Prove clean installation and package import through uv.
 
 ### Learning Objectives
 

@@ -153,3 +153,50 @@ proof scheduled for Feature 1.3.
 
 Begin Feature 1.3 — Prove clean installation and package import through uv. Do
 not begin it without separate approval.
+
+## 2026-08-09 — Feature 1.3: Clean Installation Proof
+
+### Session Goal
+
+Prove the committed Forge package installs and imports correctly from a fresh,
+non-editable environment without relying on the repository root or
+`PYTHONPATH`.
+
+### Feature Completed
+
+- Feature 1.3 — Proved clean installation and package import through uv.
+
+### Work Completed
+
+- Created a temporary local clone from committed Feature 1.2 state.
+- Created a new Python 3.14.7 virtual environment through frozen uv
+  synchronization.
+- Installed Forge non-editably so its files were placed in `site-packages`.
+- Ran the installed interpreter from outside the cloned repository with
+  `PYTHONPATH` explicitly unset.
+- Added a package-verification command to the README.
+- Recorded the difference between editable and non-editable installations.
+
+### Validation Performed
+
+- Confirmed `import forge` succeeds in the clean environment.
+- Confirmed `forge.__file__` resolves inside the clean environment's
+  `site-packages` directory.
+- Confirmed installed metadata reports distribution `forge-ai-starter-kit`,
+  version `0.1.0`, and license expression `MIT`.
+- Confirmed the temporary clone remained clean after frozen synchronization.
+- Confirmed the primary repository's package and dependency files were
+  unchanged.
+
+### Scope Notes
+
+- No Python source, packaging configuration, dependency, or lockfile changes
+  were required.
+- No permanent test harness was introduced; that begins in Step 2.
+- No push or pull request was performed.
+
+### Next Starting Point
+
+Begin Feature 2.1 — Configure Black and Ruff with compatible responsibilities.
+Create the Step 2 branch only after Step 1 is reviewed and merged. Do not begin
+Feature 2.1 without separate approval.
