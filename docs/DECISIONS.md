@@ -176,3 +176,36 @@ boundary even when time remains.
 - Diffs remain focused and easier to understand.
 - Each design decision receives deliberate review.
 - Progress may feel slower, but comprehension and maintainability improve.
+
+## Decision 007 — Type-Check Production Source Strictly
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+
+### Context
+
+Forge will introduce typed configuration, logging, errors, and API boundaries.
+Permissive type checking would allow partially annotated functions and hidden
+`Any` values to weaken those contracts as the codebase grows.
+
+### Decision
+
+Run MyPy 2.3.0 in strict mode against `src` using Python 3.14 semantics. Keep
+error codes visible, reject unused configuration, and add exceptions only for
+specific evidence-backed incompatibilities.
+
+### Alternatives Considered
+
+- Use MyPy's default permissive settings.
+- Enable every `disallow-any-*` option immediately.
+- Ignore all missing third-party imports globally.
+- Type-check tests before the test harness exists.
+
+### Consequences
+
+- Production functions must have complete type annotations.
+- Type errors surface before runtime and before code reaches CI.
+- Third-party typing problems require narrow, documented treatment rather than
+  global suppression.
+- Tests remain outside the current MyPy target unless a later need justifies
+  expanding it.

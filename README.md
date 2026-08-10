@@ -93,8 +93,16 @@ Run Ruff's correctness, import-ordering, and modernization checks:
 uv run ruff check .
 ```
 
+Type-check the production package with MyPy:
+
+```bash
+uv run mypy src
+```
+
 Black is the project's only formatter. Ruff is intentionally limited to
 linting and import rules so the tools do not compete to rewrite the same code.
+MyPy analyzes type relationships without changing files or validating runtime
+input.
 
 ## Repository Layout
 

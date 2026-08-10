@@ -267,3 +267,38 @@ branch.
 - Infer Python compatibility from standard project metadata when supported.
 - Begin with useful correctness rules and add stricter rules deliberately.
 - Run check-only commands before committing.
+
+## Static Type Checking
+
+### Simple Explanation
+
+Static type checking analyzes how values flow through annotated Python code
+without executing the program. It can identify incompatible arguments,
+incorrect return values, and incomplete function contracts before runtime.
+
+### Why It Exists
+
+Python's runtime flexibility is useful, but it can defer interface mistakes
+until a particular path executes. Type checking provides earlier feedback and
+makes module boundaries easier to understand.
+
+### Professional Use
+
+Teams type-check production modules locally and in CI. Editors also use the
+same annotations for navigation, completion, and immediate diagnostics.
+
+### Common Mistakes
+
+- Assuming type annotations automatically enforce values at runtime
+- Allowing untyped functions to create hidden `Any` values
+- Globally ignoring missing imports instead of addressing one dependency
+- Adding broad suppressions without an error code and explanation
+- Treating static typing as a substitute for runtime input validation
+
+### Best Practices
+
+- Type production boundaries and return values explicitly.
+- Keep error codes visible so each failure is actionable.
+- Use narrow exceptions only when a real library incompatibility requires one.
+- Pair static typing with runtime validation for external data.
+- Run MyPy through the project's locked environment.

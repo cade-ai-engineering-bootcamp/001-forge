@@ -241,3 +241,44 @@ introducing competing formatters or beginning MyPy and Pytest configuration.
 
 Begin Feature 2.2 — Configure strict-but-practical MyPy checking. Do not begin
 it without separate approval.
+
+## 2026-08-10 — Feature 2.2: MyPy
+
+### Session Goal
+
+Configure strict static type checking for production source without adding
+premature plugins, global suppressions, tests, or application behavior.
+
+### Feature Completed
+
+- Feature 2.2 — Configured strict-but-practical MyPy checking.
+
+### Work Completed
+
+- Configured MyPy 2.3.0 for Python 3.14 and the `src` tree.
+- Enabled strict mode, readable output, visible error codes, and unused-config
+  detection.
+- Documented the standard local type-checking command.
+- Recorded the distinction between static typing and runtime validation.
+
+### Validation Performed
+
+- Confirmed frozen synchronization succeeds without lockfile changes.
+- Confirmed `uv run mypy src` passes.
+- Confirmed a temporary untyped function fails with `no-untyped-def`, proving
+  strict mode is active.
+- Confirmed Black and Ruff still pass with the centralized configuration.
+- Confirmed dependency declarations and resolutions remain unchanged.
+- Confirmed the patch has no whitespace errors.
+
+### Scope Notes
+
+- No Python source or test files were changed.
+- No Pydantic plugin, missing-import suppression, or error-code override was
+  added.
+- Pytest and coverage configuration remain separately gated.
+
+### Next Starting Point
+
+Begin Feature 2.3 — Configure Pytest, coverage, test discovery, and the first
+package test. Do not begin it without separate approval.
