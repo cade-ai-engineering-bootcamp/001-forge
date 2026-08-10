@@ -302,3 +302,41 @@ same annotations for navigation, completion, and immediate diagnostics.
 - Use narrow exceptions only when a real library incompatibility requires one.
 - Pair static typing with runtime validation for external data.
 - Run MyPy through the project's locked environment.
+
+## Test Discovery and Coverage
+
+### Simple Explanation
+
+Test discovery is the set of rules Pytest uses to find test files and
+functions. Coverage measures which executable source lines and branches run
+during those tests.
+
+### Why It Exists
+
+Predictable discovery prevents tests from silently disappearing, while a
+coverage gate reveals untested production paths before they reach the shared
+branch.
+
+### Professional Use
+
+Teams centralize test options so local development and CI run the same suite.
+Coverage reports help reviewers find missing behavior, especially around
+errors and conditional branches.
+
+### Common Mistakes
+
+- Adding `src` to `PYTHONPATH` and hiding broken package installation
+- Assuming installed distribution metadata proves its editable path is active
+- Confusing a high coverage percentage with correct behavior
+- Writing assertions only to execute lines rather than verify outcomes
+- Allowing unknown markers or configuration keys to pass silently
+- Measuring tests themselves instead of the production package
+
+### Best Practices
+
+- Use explicit test directories and conventional test names.
+- Import the installed package instead of modifying Python's import path.
+- Inspect `.pth` processing when editable metadata exists but imports fail.
+- Enable branch coverage and enforce a documented minimum.
+- Treat coverage as a navigation aid, not proof of correctness.
+- Test behavior and failure paths as meaningful modules are introduced.

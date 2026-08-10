@@ -99,10 +99,17 @@ Type-check the production package with MyPy:
 uv run mypy src
 ```
 
+Run the test suite with branch coverage and the 90% coverage gate:
+
+```bash
+uv run pytest
+```
+
 Black is the project's only formatter. Ruff is intentionally limited to
 linting and import rules so the tools do not compete to rewrite the same code.
 MyPy analyzes type relationships without changing files or validating runtime
-input.
+input. Pytest discovers tests under `tests/` and measures the installed `forge`
+package without adding `src` directly to Python's import path.
 
 ## Repository Layout
 
@@ -111,6 +118,8 @@ input.
 ├── docs/               # Agenda, journal, decisions, and learning records
 ├── src/
 │   └── forge/           # Installable Python import package
+├── tests/
+│   └── unit/            # Fast, isolated package tests
 ├── .python-version     # Required Python interpreter version
 ├── CHANGELOG.md        # Notable project changes
 ├── LICENSE             # MIT license

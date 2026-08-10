@@ -18,5 +18,6 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
 - Verified frozen, non-editable installation and package metadata.
 - Compatible Black formatting and Ruff linting configuration.
 - Strict MyPy checking for production source code.
+- Pytest discovery, branch coverage enforcement, and the first package test.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 29% (9 of 31 features complete)
-- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation
-- **Current step:** Step 2 — Local Quality and Test Harness
-- **Current feature:** Feature 2.3 — Configure Pytest, coverage, test discovery, and the first package test
-- **Estimated remaining focused time:** Approximately 7 hours 50 minutes
+- **Overall progress:** 32% (10 of 31 features complete)
+- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness
+- **Current step:** Step 3 — Typed Configuration and Secret Safety
+- **Current feature:** Feature 3.1 — Define the environment contract in `.env.example`
+- **Estimated remaining focused time:** Approximately 7 hours 30 minutes
 
 ## Completed Work
 
@@ -35,6 +35,7 @@ specific AI or business logic.
 - [x] Proved clean installation and package import through uv.
 - [x] Configured Black and Ruff with compatible responsibilities.
 - [x] Configured strict-but-practical MyPy checking.
+- [x] Configured Pytest, coverage, test discovery, and the first package test.
 
 ## Remaining Work
 
@@ -311,7 +312,7 @@ the codebase is still small.
 
 - [x] **2.1** Configure Black and Ruff with compatible responsibilities.
 - [x] **2.2** Configure strict-but-practical MyPy checking.
-- [ ] **2.3** Configure Pytest, coverage, test discovery, and the first package test.
+- [x] **2.3** Configure Pytest, coverage, test discovery, and the first package test.
 
 ### Learning Objectives
 

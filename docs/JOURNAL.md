@@ -282,3 +282,54 @@ premature plugins, global suppressions, tests, or application behavior.
 
 Begin Feature 2.3 — Configure Pytest, coverage, test discovery, and the first
 package test. Do not begin it without separate approval.
+
+## 2026-08-10 — Feature 2.3: Pytest and Coverage
+
+### Session Goal
+
+Establish predictable test discovery and coverage enforcement with the first
+package test, without modifying production behavior or hiding packaging issues.
+
+### Feature Completed
+
+- Feature 2.3 — Configured Pytest, coverage, test discovery, and the first
+  package test.
+
+### Work Completed
+
+- Configured Pytest 9.1.1 to discover tests under `tests`.
+- Required the locked pytest-cov plugin and enabled strict configuration and
+  marker handling.
+- Enabled branch coverage for the installed `forge` package with a 90% gate.
+- Added a unit test for the distribution and import-package identity.
+- Documented the standard local test command and repository test layout.
+- Diagnosed and cleared a local macOS `UF_HIDDEN` flag that caused Python 3.14
+  to skip the generated editable-install `.pth` file.
+
+### Validation Performed
+
+- Confirmed frozen synchronization succeeds without lockfile changes.
+- Confirmed Pytest discovers and passes the package test.
+- Confirmed branch coverage reports 100% and enforces the 90% minimum.
+- Confirmed the test imports the installed package without a path override.
+- Confirmed Python processes the editable-install path after the local virtual
+  environment metadata correction.
+- Confirmed Black, Ruff, and MyPy still pass.
+- Confirmed dependency declarations and resolutions remain unchanged.
+- Confirmed the patch has no whitespace errors.
+
+### Scope Notes
+
+- No production source was changed to manufacture coverage.
+- The virtual-environment flag correction affected only the ignored,
+  reproducible `.venv` directory.
+- The current 100% covers a module with no executable statements and is not a
+  claim of comprehensive behavioral testing.
+- No integration tests, fixtures, application modules, or Step 3 configuration
+  were added.
+
+### Next Starting Point
+
+Begin Feature 3.1 — Define the environment contract in `.env.example`. Create
+the Step 3 branch only after Step 2 is reviewed and merged. Do not begin Feature
+3.1 without separate approval.
