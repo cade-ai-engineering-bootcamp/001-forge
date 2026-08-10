@@ -79,6 +79,38 @@ When finished, leave the virtual environment with:
 deactivate
 ```
 
+## Local Quality Checks
+
+Verify that Python files match Black's formatting rules:
+
+```bash
+uv run black --check .
+```
+
+Run Ruff's correctness, import-ordering, and modernization checks:
+
+```bash
+uv run ruff check .
+```
+
+Type-check the production package with MyPy:
+
+```bash
+uv run mypy src
+```
+
+Run the test suite with branch coverage and the 90% coverage gate:
+
+```bash
+uv run pytest
+```
+
+Black is the project's only formatter. Ruff is intentionally limited to
+linting and import rules so the tools do not compete to rewrite the same code.
+MyPy analyzes type relationships without changing files or validating runtime
+input. Pytest discovers tests under `tests/` and measures the installed `forge`
+package without adding `src` directly to Python's import path.
+
 ## Repository Layout
 
 ```text
@@ -86,6 +118,8 @@ deactivate
 ├── docs/               # Agenda, journal, decisions, and learning records
 ├── src/
 │   └── forge/           # Installable Python import package
+├── tests/
+│   └── unit/            # Fast, isolated package tests
 ├── .python-version     # Required Python interpreter version
 ├── CHANGELOG.md        # Notable project changes
 ├── LICENSE             # MIT license

@@ -232,3 +232,111 @@ the chance that packaging omissions reach production.
 - Use frozen synchronization so validation cannot rewrite the lockfile.
 - Run the installed interpreter outside the checkout with `PYTHONPATH` unset.
 - Confirm the imported file lives in the expected environment.
+
+## Formatting and Linting
+
+### Simple Explanation
+
+A formatter decides how code should look and rewrites it consistently. A
+linter analyzes code for likely mistakes, suspicious patterns, and project
+conventions without owning the complete visual style.
+
+### Why It Exists
+
+Automated formatting removes subjective style debates, while linting catches
+problems that valid syntax and consistent formatting cannot detect.
+
+### Professional Use
+
+Teams run the same formatting and linting commands locally and in CI. A failed
+check blocks inconsistent or suspicious code before it reaches the shared
+branch.
+
+### Common Mistakes
+
+- Enabling two formatters that repeatedly rewrite each other's output
+- Treating a formatter as a correctness checker
+- Selecting every lint rule without evaluating conflicts and false positives
+- Duplicating the Python target in several places until the settings drift
+- Silencing a warning without understanding the behavior it protects
+
+### Best Practices
+
+- Give each tool one explicit responsibility.
+- Share settings, such as line length, where tool behavior overlaps.
+- Infer Python compatibility from standard project metadata when supported.
+- Begin with useful correctness rules and add stricter rules deliberately.
+- Run check-only commands before committing.
+
+## Static Type Checking
+
+### Simple Explanation
+
+Static type checking analyzes how values flow through annotated Python code
+without executing the program. It can identify incompatible arguments,
+incorrect return values, and incomplete function contracts before runtime.
+
+### Why It Exists
+
+Python's runtime flexibility is useful, but it can defer interface mistakes
+until a particular path executes. Type checking provides earlier feedback and
+makes module boundaries easier to understand.
+
+### Professional Use
+
+Teams type-check production modules locally and in CI. Editors also use the
+same annotations for navigation, completion, and immediate diagnostics.
+
+### Common Mistakes
+
+- Assuming type annotations automatically enforce values at runtime
+- Allowing untyped functions to create hidden `Any` values
+- Globally ignoring missing imports instead of addressing one dependency
+- Adding broad suppressions without an error code and explanation
+- Treating static typing as a substitute for runtime input validation
+
+### Best Practices
+
+- Type production boundaries and return values explicitly.
+- Keep error codes visible so each failure is actionable.
+- Use narrow exceptions only when a real library incompatibility requires one.
+- Pair static typing with runtime validation for external data.
+- Run MyPy through the project's locked environment.
+
+## Test Discovery and Coverage
+
+### Simple Explanation
+
+Test discovery is the set of rules Pytest uses to find test files and
+functions. Coverage measures which executable source lines and branches run
+during those tests.
+
+### Why It Exists
+
+Predictable discovery prevents tests from silently disappearing, while a
+coverage gate reveals untested production paths before they reach the shared
+branch.
+
+### Professional Use
+
+Teams centralize test options so local development and CI run the same suite.
+Coverage reports help reviewers find missing behavior, especially around
+errors and conditional branches.
+
+### Common Mistakes
+
+- Adding `src` to `PYTHONPATH` and hiding broken package installation
+- Assuming installed distribution metadata proves its editable path is active
+- Confusing a high coverage percentage with correct behavior
+- Writing assertions only to execute lines rather than verify outcomes
+- Allowing unknown markers or configuration keys to pass silently
+- Measuring tests themselves instead of the production package
+
+### Best Practices
+
+- Use explicit test directories and conventional test names.
+- Import the installed package instead of modifying Python's import path.
+- Inspect `.pth` processing when editable metadata exists but imports fail.
+- Enable branch coverage and enforce a documented minimum.
+- Treat coverage as a navigation aid, not proof of correctness.
+- Test behavior and failure paths as meaningful modules are introduced.

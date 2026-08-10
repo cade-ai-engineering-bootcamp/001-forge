@@ -200,3 +200,136 @@ non-editable environment without relying on the repository root or
 Begin Feature 2.1 — Configure Black and Ruff with compatible responsibilities.
 Create the Step 2 branch only after Step 1 is reviewed and merged. Do not begin
 Feature 2.1 without separate approval.
+
+## 2026-08-10 — Feature 2.1: Black and Ruff
+
+### Session Goal
+
+Configure deterministic Python formatting and focused linting without
+introducing competing formatters or beginning MyPy and Pytest configuration.
+
+### Feature Completed
+
+- Feature 2.1 — Configured Black and Ruff with compatible responsibilities.
+
+### Work Completed
+
+- Configured Black 26.5.1 as the project's sole formatter.
+- Configured Ruff 0.16.2 for correctness, import ordering, common bug patterns,
+  Python modernization, and Ruff-specific rules.
+- Shared an 88-character line length while leaving Python-version inference to
+  standard project metadata.
+- Documented the standard local formatting and linting checks.
+- Clarified why Ruff does not own formatting or line-length enforcement.
+
+### Validation Performed
+
+- Confirmed frozen synchronization succeeds without lockfile changes.
+- Confirmed `uv run black --check .` passes.
+- Confirmed `uv run ruff check .` passes.
+- Confirmed both tools load the committed configuration and expected versions.
+- Confirmed dependency declarations and resolutions remain unchanged.
+- Confirmed the patch has no whitespace errors.
+
+### Scope Notes
+
+- No Python source or test files were changed.
+- No dependencies or lockfile entries were changed.
+- MyPy, Pytest, and coverage configuration remain separately gated.
+
+### Next Starting Point
+
+Begin Feature 2.2 — Configure strict-but-practical MyPy checking. Do not begin
+it without separate approval.
+
+## 2026-08-10 — Feature 2.2: MyPy
+
+### Session Goal
+
+Configure strict static type checking for production source without adding
+premature plugins, global suppressions, tests, or application behavior.
+
+### Feature Completed
+
+- Feature 2.2 — Configured strict-but-practical MyPy checking.
+
+### Work Completed
+
+- Configured MyPy 2.3.0 for Python 3.14 and the `src` tree.
+- Enabled strict mode, readable output, visible error codes, and unused-config
+  detection.
+- Documented the standard local type-checking command.
+- Recorded the distinction between static typing and runtime validation.
+
+### Validation Performed
+
+- Confirmed frozen synchronization succeeds without lockfile changes.
+- Confirmed `uv run mypy src` passes.
+- Confirmed a temporary untyped function fails with `no-untyped-def`, proving
+  strict mode is active.
+- Confirmed Black and Ruff still pass with the centralized configuration.
+- Confirmed dependency declarations and resolutions remain unchanged.
+- Confirmed the patch has no whitespace errors.
+
+### Scope Notes
+
+- No Python source or test files were changed.
+- No Pydantic plugin, missing-import suppression, or error-code override was
+  added.
+- Pytest and coverage configuration remain separately gated.
+
+### Next Starting Point
+
+Begin Feature 2.3 — Configure Pytest, coverage, test discovery, and the first
+package test. Do not begin it without separate approval.
+
+## 2026-08-10 — Feature 2.3: Pytest and Coverage
+
+### Session Goal
+
+Establish predictable test discovery and coverage enforcement with the first
+package test, without modifying production behavior or hiding packaging issues.
+
+### Feature Completed
+
+- Feature 2.3 — Configured Pytest, coverage, test discovery, and the first
+  package test.
+
+### Work Completed
+
+- Configured Pytest 9.1.1 to discover tests under `tests`.
+- Required the locked pytest-cov plugin and enabled strict configuration and
+  marker handling.
+- Enabled branch coverage for the installed `forge` package with a 90% gate.
+- Added a unit test for the distribution and import-package identity.
+- Documented the standard local test command and repository test layout.
+- Diagnosed and cleared a local macOS `UF_HIDDEN` flag that caused Python 3.14
+  to skip the generated editable-install `.pth` file.
+
+### Validation Performed
+
+- Confirmed frozen synchronization succeeds without lockfile changes.
+- Confirmed Pytest discovers and passes the package test.
+- Confirmed branch coverage reports 100% and enforces the 90% minimum.
+- Confirmed the test imports the installed package without a path override.
+- Confirmed Python processes the editable-install path after the local virtual
+  environment metadata correction.
+- Confirmed Black, Ruff, and MyPy still pass.
+- Confirmed dependency declarations and resolutions remain unchanged.
+- Confirmed the patch has no whitespace errors.
+
+### Scope Notes
+
+- No production source was changed to manufacture coverage.
+- The virtual-environment flag correction affected only the ignored,
+  reproducible `.venv` directory.
+- The current 100% covers a module with no executable statements and is not a
+  claim of comprehensive behavioral testing.
+- No integration tests, fixtures, application modules, or Step 3 configuration
+  were added.
+
+### Next Starting Point
+
+Begin Feature 3.1 — Define the environment contract in `.env.example`. Create
+the Step 3 branch only after Step 2 is reviewed and merged. Do not begin Feature
+3.1 without separate approval.

@@ -131,8 +131,11 @@ part of the required project stack.
 
 ### Decision
 
-Use Ruff for linting and import rules and Black for formatting. Configure both
-with compatible line-length, target-version, and exclusion settings.
+Use Black's stable style as the only formatter, with an 88-character line
+length. Use Ruff for important pycodestyle errors, Pyflakes, import ordering,
+common bug patterns, modern Python upgrades, and Ruff-specific correctness
+rules. Both tools infer Python compatibility from `project.requires-python`
+and enforce the versions declared in the project environment.
 
 ### Alternatives Considered
 
@@ -143,6 +146,8 @@ with compatible line-length, target-version, and exclusion settings.
 
 - The required tools remain educationally distinct.
 - Formatting ownership stays unambiguous.
+- Ruff does not enforce `E501`; Black owns line wrapping and intentionally does
+  not rewrite every long string or comment.
 - Configuration tests and CI must prevent the tools from disagreeing.
 
 ## Decision 006 — Enforce Feature-Level Scope Control
@@ -171,3 +176,36 @@ boundary even when time remains.
 - Diffs remain focused and easier to understand.
 - Each design decision receives deliberate review.
 - Progress may feel slower, but comprehension and maintainability improve.
+
+## Decision 007 — Type-Check Production Source Strictly
+
+- **Status:** Accepted
+- **Date:** 2026-08-10
+
+### Context
+
+Forge will introduce typed configuration, logging, errors, and API boundaries.
+Permissive type checking would allow partially annotated functions and hidden
+`Any` values to weaken those contracts as the codebase grows.
+
+### Decision
+
+Run MyPy 2.3.0 in strict mode against `src` using Python 3.14 semantics. Keep
+error codes visible, reject unused configuration, and add exceptions only for
+specific evidence-backed incompatibilities.
+
+### Alternatives Considered
+
+- Use MyPy's default permissive settings.
+- Enable every `disallow-any-*` option immediately.
+- Ignore all missing third-party imports globally.
+- Type-check tests before the test harness exists.
+
+### Consequences
+
+- Production functions must have complete type annotations.
+- Type errors surface before runtime and before code reaches CI.
+- Third-party typing problems require narrow, documented treatment rather than
+  global suppression.
+- Tests remain outside the current MyPy target unless a later need justifies
+  expanding it.
