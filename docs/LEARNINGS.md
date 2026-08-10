@@ -232,3 +232,38 @@ the chance that packaging omissions reach production.
 - Use frozen synchronization so validation cannot rewrite the lockfile.
 - Run the installed interpreter outside the checkout with `PYTHONPATH` unset.
 - Confirm the imported file lives in the expected environment.
+
+## Formatting and Linting
+
+### Simple Explanation
+
+A formatter decides how code should look and rewrites it consistently. A
+linter analyzes code for likely mistakes, suspicious patterns, and project
+conventions without owning the complete visual style.
+
+### Why It Exists
+
+Automated formatting removes subjective style debates, while linting catches
+problems that valid syntax and consistent formatting cannot detect.
+
+### Professional Use
+
+Teams run the same formatting and linting commands locally and in CI. A failed
+check blocks inconsistent or suspicious code before it reaches the shared
+branch.
+
+### Common Mistakes
+
+- Enabling two formatters that repeatedly rewrite each other's output
+- Treating a formatter as a correctness checker
+- Selecting every lint rule without evaluating conflicts and false positives
+- Duplicating the Python target in several places until the settings drift
+- Silencing a warning without understanding the behavior it protects
+
+### Best Practices
+
+- Give each tool one explicit responsibility.
+- Share settings, such as line length, where tool behavior overlaps.
+- Infer Python compatibility from standard project metadata when supported.
+- Begin with useful correctness rules and add stricter rules deliberately.
+- Run check-only commands before committing.

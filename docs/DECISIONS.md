@@ -131,8 +131,11 @@ part of the required project stack.
 
 ### Decision
 
-Use Ruff for linting and import rules and Black for formatting. Configure both
-with compatible line-length, target-version, and exclusion settings.
+Use Black's stable style as the only formatter, with an 88-character line
+length. Use Ruff for important pycodestyle errors, Pyflakes, import ordering,
+common bug patterns, modern Python upgrades, and Ruff-specific correctness
+rules. Both tools infer Python compatibility from `project.requires-python`
+and enforce the versions declared in the project environment.
 
 ### Alternatives Considered
 
@@ -143,6 +146,8 @@ with compatible line-length, target-version, and exclusion settings.
 
 - The required tools remain educationally distinct.
 - Formatting ownership stays unambiguous.
+- Ruff does not enforce `E501`; Black owns line wrapping and intentionally does
+  not rewrite every long string or comment.
 - Configuration tests and CI must prevent the tools from disagreeing.
 
 ## Decision 006 — Enforce Feature-Level Scope Control

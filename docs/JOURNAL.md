@@ -200,3 +200,44 @@ non-editable environment without relying on the repository root or
 Begin Feature 2.1 — Configure Black and Ruff with compatible responsibilities.
 Create the Step 2 branch only after Step 1 is reviewed and merged. Do not begin
 Feature 2.1 without separate approval.
+
+## 2026-08-10 — Feature 2.1: Black and Ruff
+
+### Session Goal
+
+Configure deterministic Python formatting and focused linting without
+introducing competing formatters or beginning MyPy and Pytest configuration.
+
+### Feature Completed
+
+- Feature 2.1 — Configured Black and Ruff with compatible responsibilities.
+
+### Work Completed
+
+- Configured Black 26.5.1 as the project's sole formatter.
+- Configured Ruff 0.16.2 for correctness, import ordering, common bug patterns,
+  Python modernization, and Ruff-specific rules.
+- Shared an 88-character line length while leaving Python-version inference to
+  standard project metadata.
+- Documented the standard local formatting and linting checks.
+- Clarified why Ruff does not own formatting or line-length enforcement.
+
+### Validation Performed
+
+- Confirmed frozen synchronization succeeds without lockfile changes.
+- Confirmed `uv run black --check .` passes.
+- Confirmed `uv run ruff check .` passes.
+- Confirmed both tools load the committed configuration and expected versions.
+- Confirmed dependency declarations and resolutions remain unchanged.
+- Confirmed the patch has no whitespace errors.
+
+### Scope Notes
+
+- No Python source or test files were changed.
+- No dependencies or lockfile entries were changed.
+- MyPy, Pytest, and coverage configuration remain separately gated.
+
+### Next Starting Point
+
+Begin Feature 2.2 — Configure strict-but-practical MyPy checking. Do not begin
+it without separate approval.

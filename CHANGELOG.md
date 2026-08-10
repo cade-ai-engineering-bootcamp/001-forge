@@ -16,5 +16,6 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
 - MIT license and initial repository documentation.
 - Minimal `forge` import package and uv build configuration.
 - Verified frozen, non-editable installation and package metadata.
+- Compatible Black formatting and Ruff linting configuration.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

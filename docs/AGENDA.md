@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 23% (7 of 31 features complete)
+- **Overall progress:** 26% (8 of 31 features complete)
 - **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation
 - **Current step:** Step 2 — Local Quality and Test Harness
-- **Current feature:** Feature 2.1 — Configure Black and Ruff with compatible responsibilities
-- **Estimated remaining focused time:** Approximately 8 hours 30 minutes
+- **Current feature:** Feature 2.2 — Configure strict-but-practical MyPy checking
+- **Estimated remaining focused time:** Approximately 8 hours 10 minutes
 
 ## Completed Work
 
@@ -33,6 +33,7 @@ specific AI or business logic.
 - [x] Added licensing, changelog, initial README, and repository hygiene.
 - [x] Created the minimal `src/forge` package and enabled project packaging.
 - [x] Proved clean installation and package import through uv.
+- [x] Configured Black and Ruff with compatible responsibilities.
 
 ## Remaining Work
 
@@ -307,7 +308,7 @@ the codebase is still small.
 
 ### Features
 
-- [ ] **2.1** Configure Black and Ruff with compatible responsibilities.
+- [x] **2.1** Configure Black and Ruff with compatible responsibilities.
 - [ ] **2.2** Configure strict-but-practical MyPy checking.
 - [ ] **2.3** Configure Pytest, coverage, test discovery, and the first package test.
 

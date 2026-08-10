@@ -79,6 +79,23 @@ When finished, leave the virtual environment with:
 deactivate
 ```
 
+## Local Quality Checks
+
+Verify that Python files match Black's formatting rules:
+
+```bash
+uv run black --check .
+```
+
+Run Ruff's correctness, import-ordering, and modernization checks:
+
+```bash
+uv run ruff check .
+```
+
+Black is the project's only formatter. Ruff is intentionally limited to
+linting and import rules so the tools do not compete to rewrite the same code.
+
 ## Repository Layout
 
 ```text
