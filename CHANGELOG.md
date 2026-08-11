@@ -20,5 +20,7 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
 - Strict MyPy checking for production source code.
 - Pytest discovery, branch coverage enforcement, and the first package test.
 - Safe example contract for Forge environment variables and optional secrets.
+- Typed settings model with validated values, masked secrets, and controlled
+  dotenv loading.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

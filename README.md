@@ -96,8 +96,22 @@ cp .env.example .env
 | `FORGE_API_KEY` | Optional secret used to demonstrate secret-safe configuration handling. |
 
 The committed example is a contract, not a place for credentials. `.env` and
-environment-specific variants such as `.env.local` remain ignored. Typed
-loading and validation of these values will be added in the next feature.
+environment-specific variants such as `.env.local` remain ignored.
+
+Load and validate the configuration where the application starts:
+
+```python
+from forge.config import load_settings
+
+settings = load_settings()
+```
+
+`load_settings()` reads `.env` when it exists, then lets process environment
+variables override file values. Pass `env_file=None` to read only the process
+environment. Every call returns a fresh `Settings` instance so callers can
+inject configuration explicitly instead of depending on global state. Invalid
+enum or boolean values raise a Pydantic validation error, and `FORGE_API_KEY`
+uses Pydantic's masked `SecretStr` representation.
 
 ## Local Quality Checks
 

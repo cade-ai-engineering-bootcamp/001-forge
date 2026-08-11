@@ -372,3 +372,47 @@ without implementing configuration loading or validation.
 
 Review Feature 3.2 — Implement the typed settings model and controlled loading
 function. Do not begin Feature 3.2 without separate approval.
+
+## 2026-08-11 — Feature 3.2: Typed Settings and Controlled Loading
+
+### Session Goal
+
+Implement Forge's environment contract as a typed, validated settings model
+without introducing global configuration state.
+
+### Work Completed
+
+- Added runtime and logging enums for the values supported by the environment
+  contract.
+- Added Pydantic settings fields with development-safe defaults and a masked,
+  optional API key.
+- Configured the `FORGE_` prefix, ignored empty placeholders, and allowed
+  unrelated dotenv entries without expanding Forge's contract.
+- Added a controlled loader that optionally reads `.env` and returns a fresh
+  settings instance on each call.
+- Documented precedence, process-environment-only loading, validation, secret
+  representation, and the decision to avoid global state.
+
+### Validation Performed
+
+- Confirmed default settings construct successfully without `.env`.
+- Confirmed a dotenv file loads through the controlled function and process
+  environment values take precedence.
+- Confirmed invalid typed values raise validation errors.
+- Confirmed settings representations mask the API key.
+- Confirmed Black, Ruff, and strict MyPy pass.
+- Ran the established Pytest and coverage gate; the new production module is
+  intentionally uncovered until the separately approved Feature 3.3.
+- Confirmed dependencies and the lockfile remain unchanged.
+
+### Scope Notes
+
+- No module-level settings instance or cache was added.
+- No tests, logging setup, FastAPI integration, provider integration, or
+  package-root re-exports were added.
+- Behavioral configuration coverage remains exclusively Feature 3.3 work.
+
+### Next Starting Point
+
+Review Feature 3.3 — Test defaults, overrides, invalid values, and secret
+representation. Do not begin Feature 3.3 without separate approval.

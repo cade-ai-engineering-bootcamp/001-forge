@@ -379,3 +379,42 @@ prefix such as `FORGE_` identifies which variables belong to the application.
 - Keep the contract minimal and add settings only when requirements demand
   them.
 - Validate and type the contract in application code separately.
+
+## Typed Settings and Controlled Loading
+
+### Simple Explanation
+
+A typed settings model turns environment-variable strings into application
+values such as enums, booleans, and protected secrets. A loader function
+controls when that conversion happens and returns the validated result.
+
+### Why It Exists
+
+Reading raw strings throughout an application spreads parsing, defaults, and
+error handling across unrelated modules. Loading settings during import also
+creates hidden global state that is difficult to replace or reload safely.
+
+### Professional Use
+
+Applications load settings at a composition root, then pass the resulting
+object to the components that need it. Deployment environment variables take
+precedence over optional local dotenv values, while secret types prevent
+routine representations from exposing credentials.
+
+### Common Mistakes
+
+- Calling `os.getenv` throughout application code
+- Creating a settings singleton as an import side effect
+- Treating static type annotations as runtime validation
+- Logging or printing a secret's revealed value
+- Allowing an empty secret placeholder to become a meaningful credential
+- Caching settings before tests or runtime contexts can control their inputs
+
+### Best Practices
+
+- Validate external configuration once at an explicit boundary.
+- Represent closed sets of values with enums.
+- Let process environment values override local dotenv files.
+- Use secret-aware types and reveal values only at the integration boundary.
+- Return fresh settings objects unless caching has a demonstrated need.
+- Pass settings explicitly to keep dependencies visible and testable.
