@@ -340,3 +340,121 @@ errors and conditional branches.
 - Enable branch coverage and enforce a documented minimum.
 - Treat coverage as a navigation aid, not proof of correctness.
 - Test behavior and failure paths as meaningful modules are introduced.
+
+## Environment Configuration Contracts
+
+### Simple Explanation
+
+An environment configuration contract names the values an application accepts
+from its runtime environment. A committed `.env.example` shows that contract
+with safe defaults and empty secret placeholders, while a local `.env` stores
+developer-specific values and stays out of version control.
+
+### Why It Exists
+
+Applications need different settings in development, tests, and production
+without changing source code. A visible contract makes those inputs
+discoverable while separating documentation from sensitive values.
+
+### Professional Use
+
+Teams commit an example file, inject real values through local environments or
+deployment systems, and validate them at the application boundary. A shared
+prefix such as `FORGE_` identifies which variables belong to the application.
+
+### Common Mistakes
+
+- Committing a populated `.env` file or real credentials in the example
+- Inventing settings before the application has a concrete need for them
+- Treating an empty secret placeholder as permission to add an integration
+- Assuming an example file provides runtime type validation
+- Letting documentation and the implemented settings model drift apart
+
+### Best Practices
+
+- Keep `.env.example` safe to commit and `.env` ignored.
+- Use non-secret defaults only where development behavior is unambiguous.
+- Leave secret placeholders empty.
+- Give application variables a consistent prefix.
+- Keep the contract minimal and add settings only when requirements demand
+  them.
+- Validate and type the contract in application code separately.
+
+## Typed Settings and Controlled Loading
+
+### Simple Explanation
+
+A typed settings model turns environment-variable strings into application
+values such as enums, booleans, and protected secrets. A loader function
+controls when that conversion happens and returns the validated result.
+
+### Why It Exists
+
+Reading raw strings throughout an application spreads parsing, defaults, and
+error handling across unrelated modules. Loading settings during import also
+creates hidden global state that is difficult to replace or reload safely.
+
+### Professional Use
+
+Applications load settings at a composition root, then pass the resulting
+object to the components that need it. Deployment environment variables take
+precedence over optional local dotenv values, while secret types prevent
+routine representations from exposing credentials.
+
+### Common Mistakes
+
+- Calling `os.getenv` throughout application code
+- Creating a settings singleton as an import side effect
+- Treating static type annotations as runtime validation
+- Logging or printing a secret's revealed value
+- Allowing an empty secret placeholder to become a meaningful credential
+- Caching settings before tests or runtime contexts can control their inputs
+
+### Best Practices
+
+- Validate external configuration once at an explicit boundary.
+- Represent closed sets of values with enums.
+- Let process environment values override local dotenv files.
+- Use secret-aware types and reveal values only at the integration boundary.
+- Return fresh settings objects unless caching has a demonstrated need.
+- Pass settings explicitly to keep dependencies visible and testable.
+
+## Testing Environment-Driven Configuration
+
+### Simple Explanation
+
+Configuration tests temporarily control environment variables and dotenv
+files, load a settings object, and then verify the resulting typed values or
+validation errors. Each test must begin from a known environment.
+
+### Why It Exists
+
+A test that inherits a developer's shell variables or reads their local `.env`
+can pass on one machine and fail on another. Cached settings can also preserve
+values from an earlier test and make results depend on execution order.
+
+### Professional Use
+
+Teams remove relevant environment variables before each test, create dotenv
+files under the test framework's temporary directory, and restore process
+state automatically afterward. They test source precedence and failure paths
+as part of the public configuration contract.
+
+### Common Mistakes
+
+- Reading the repository's real `.env` during a unit test
+- Depending on whichever variables exist in the developer's shell
+- Changing `os.environ` without automatic cleanup
+- Reusing a cached settings object between test cases
+- Testing only valid inputs and defaults
+- Printing revealed secrets in assertions or diagnostic output
+
+### Best Practices
+
+- Clear every application-owned variable before each test.
+- Disable dotenv loading when a test only needs process variables or defaults.
+- Use temporary files for dotenv scenarios.
+- Verify environment variables take precedence over file values.
+- Assert validation errors identify the affected field.
+- Exercise secret representations without emitting revealed values.
+- Confirm repeated loads are independent and order-insensitive.

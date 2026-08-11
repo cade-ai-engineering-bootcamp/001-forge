@@ -79,6 +79,40 @@ When finished, leave the virtual environment with:
 deactivate
 ```
 
+## Environment Configuration
+
+`.env.example` documents Forge's supported environment variables without
+containing real secrets. Copy it to the ignored `.env` file for local values:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Purpose |
+| --- | --- |
+| `FORGE_ENVIRONMENT` | Runtime environment; planned values are `development`, `test`, and `production`. |
+| `FORGE_LOG_LEVEL` | Minimum logging level. |
+| `FORGE_LOG_JSON` | Selects JSON logs when `true` and human-readable logs when `false`. |
+| `FORGE_API_KEY` | Optional secret used to demonstrate secret-safe configuration handling. |
+
+The committed example is a contract, not a place for credentials. `.env` and
+environment-specific variants such as `.env.local` remain ignored.
+
+Load and validate the configuration where the application starts:
+
+```python
+from forge.config import load_settings
+
+settings = load_settings()
+```
+
+`load_settings()` reads `.env` when it exists, then lets process environment
+variables override file values. Pass `env_file=None` to read only the process
+environment. Every call returns a fresh `Settings` instance so callers can
+inject configuration explicitly instead of depending on global state. Invalid
+enum or boolean values raise a Pydantic validation error, and `FORGE_API_KEY`
+uses Pydantic's masked `SecretStr` representation.
+
 ## Local Quality Checks
 
 Verify that Python files match Black's formatting rules:
@@ -120,6 +154,7 @@ package without adding `src` directly to Python's import path.
 │   └── forge/           # Installable Python import package
 ├── tests/
 │   └── unit/            # Fast, isolated package tests
+├── .env.example        # Safe environment-variable contract
 ├── .python-version     # Required Python interpreter version
 ├── CHANGELOG.md        # Notable project changes
 ├── LICENSE             # MIT license

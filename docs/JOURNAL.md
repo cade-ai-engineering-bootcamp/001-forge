@@ -333,3 +333,133 @@ package test, without modifying production behavior or hiding packaging issues.
 Begin Feature 3.1 — Define the environment contract in `.env.example`. Create
 the Step 3 branch only after Step 2 is reviewed and merged. Do not begin Feature
 3.1 without separate approval.
+
+## 2026-08-11 — Feature 3.1: Environment Contract
+
+### Session Goal
+
+Define Forge's supported environment variables in a safe, committed example
+without implementing configuration loading or validation.
+
+### Work Completed
+
+- Added `.env.example` with development-safe values for the runtime
+  environment, logging level, and logging format.
+- Declared an empty optional API key solely to establish the project's
+  secret-handling contract.
+- Documented how `.env.example` differs from ignored local `.env` files.
+- Documented each variable's responsibility and the boundary of this feature.
+
+### Validation Performed
+
+- Confirmed `.env` and `.env.local` are ignored by Git.
+- Confirmed `.env.example` remains trackable.
+- Confirmed the example contains no real secret value.
+- Confirmed frozen dependency synchronization and all established quality
+  checks still pass.
+- Confirmed no source, test, dependency, or lockfile changes were introduced.
+
+### Scope Notes
+
+- No model provider, authentication, database, host, or port configuration was
+  added.
+- No settings model, `.env` loader, global settings object, or configuration
+  tests were added.
+- `FORGE_API_KEY` exists only to demonstrate safe secret handling in later
+  features; it does not authorize an external integration.
+
+### Next Starting Point
+
+Review Feature 3.2 — Implement the typed settings model and controlled loading
+function. Do not begin Feature 3.2 without separate approval.
+
+## 2026-08-11 — Feature 3.2: Typed Settings and Controlled Loading
+
+### Session Goal
+
+Implement Forge's environment contract as a typed, validated settings model
+without introducing global configuration state.
+
+### Work Completed
+
+- Added runtime and logging enums for the values supported by the environment
+  contract.
+- Added Pydantic settings fields with development-safe defaults and a masked,
+  optional API key.
+- Configured the `FORGE_` prefix, ignored empty placeholders, and allowed
+  unrelated dotenv entries without expanding Forge's contract.
+- Added a controlled loader that optionally reads `.env` and returns a fresh
+  settings instance on each call.
+- Documented precedence, process-environment-only loading, validation, secret
+  representation, and the decision to avoid global state.
+
+### Validation Performed
+
+- Confirmed default settings construct successfully without `.env`.
+- Confirmed a dotenv file loads through the controlled function and process
+  environment values take precedence.
+- Confirmed invalid typed values raise validation errors.
+- Confirmed settings representations mask the API key.
+- Confirmed Black, Ruff, and strict MyPy pass.
+- Ran the established Pytest and coverage gate; the new production module is
+  intentionally uncovered until the separately approved Feature 3.3.
+- Confirmed dependencies and the lockfile remain unchanged.
+
+### Scope Notes
+
+- No module-level settings instance or cache was added.
+- No tests, logging setup, FastAPI integration, provider integration, or
+  package-root re-exports were added.
+- Behavioral configuration coverage remains exclusively Feature 3.3 work.
+
+### Next Starting Point
+
+Review Feature 3.3 — Test defaults, overrides, invalid values, and secret
+representation. Do not begin Feature 3.3 without separate approval.
+
+## 2026-08-11 — Feature 3.3: Configuration Tests
+
+### Session Goal
+
+Prove the typed configuration contract with isolated tests and restore the
+project's coverage gate without changing production behavior.
+
+### Work Completed
+
+- Added an automatic fixture that removes every supported `FORGE_` variable
+  before each test.
+- Tested development-safe defaults and confirmed repeated loads return
+  independent settings instances.
+- Tested typed dotenv loading and process-environment precedence with temporary
+  files.
+- Tested useful validation failures for invalid environment, log-level, and
+  boolean values.
+- Tested empty secret handling and masked secret representations in strings,
+  representations, and captured log output.
+
+### Validation Performed
+
+- Confirmed the configuration test module passes independently.
+- Confirmed the full test suite passes with branch coverage above the required
+  90% threshold.
+- Confirmed tests do not read the developer's real `.env` file or inherit
+  supported variables from the shell.
+- Confirmed Black, Ruff, strict MyPy, and frozen dependency synchronization
+  pass.
+- Confirmed production source, dependencies, and the lockfile remain
+  unchanged.
+- Confirmed the patch has no whitespace errors.
+
+### Scope Notes
+
+- No production logging configuration or logger behavior was introduced.
+- The captured-log assertion only verifies that the existing settings
+  representation remains secret-safe when logged.
+- No production source, dependency, lockfile, or package API changes were
+  added.
+
+### Next Starting Point
+
+Review Step 4 and Feature 4.1 — Configure idempotent human-readable and JSON
+logging modes. Create the Step 4 branch only after Step 3 is reviewed and
+merged. Do not begin Feature 4.1 without separate approval.

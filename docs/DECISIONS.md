@@ -209,3 +209,38 @@ specific evidence-backed incompatibilities.
   global suppression.
 - Tests remain outside the current MyPy target unless a later need justifies
   expanding it.
+
+## Decision 008 — Load Typed Settings Without Global State
+
+- **Status:** Accepted
+- **Date:** 2026-08-11
+
+### Context
+
+Forge needs validated environment configuration, optional local dotenv
+loading, and safe secret representation. A module-level settings instance
+would load configuration during import and make tests or alternate runtime
+contexts dependent on hidden shared state.
+
+### Decision
+
+Define a Pydantic `BaseSettings` model with a `FORGE_` prefix, typed enums,
+boolean parsing, and `SecretStr` for secret values. Load an optional `.env` file
+through `load_settings()`, returning a new `Settings` instance on every call.
+Let process environment variables take precedence over dotenv values.
+
+### Alternatives Considered
+
+- Construct one settings singleton when the module is imported.
+- Read environment variables manually with `os.getenv`.
+- Cache the loader globally.
+- Require every caller to instantiate `Settings` directly.
+
+### Consequences
+
+- Configuration is validated at a single typed boundary.
+- Callers can inject settings explicitly and isolate repeated loads in tests.
+- Importing the module has no configuration-loading side effect.
+- Each uncached call performs configuration loading again; callers own the
+  lifetime of the returned object.
+- Secret access remains explicit, and standard representations stay masked.
