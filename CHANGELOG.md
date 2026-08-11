@@ -19,5 +19,6 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
 - Compatible Black formatting and Ruff linting configuration.
 - Strict MyPy checking for production source code.
 - Pytest discovery, branch coverage enforcement, and the first package test.
+- Safe example contract for Forge environment variables and optional secrets.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

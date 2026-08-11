@@ -340,3 +340,42 @@ errors and conditional branches.
 - Enable branch coverage and enforce a documented minimum.
 - Treat coverage as a navigation aid, not proof of correctness.
 - Test behavior and failure paths as meaningful modules are introduced.
+
+## Environment Configuration Contracts
+
+### Simple Explanation
+
+An environment configuration contract names the values an application accepts
+from its runtime environment. A committed `.env.example` shows that contract
+with safe defaults and empty secret placeholders, while a local `.env` stores
+developer-specific values and stays out of version control.
+
+### Why It Exists
+
+Applications need different settings in development, tests, and production
+without changing source code. A visible contract makes those inputs
+discoverable while separating documentation from sensitive values.
+
+### Professional Use
+
+Teams commit an example file, inject real values through local environments or
+deployment systems, and validate them at the application boundary. A shared
+prefix such as `FORGE_` identifies which variables belong to the application.
+
+### Common Mistakes
+
+- Committing a populated `.env` file or real credentials in the example
+- Inventing settings before the application has a concrete need for them
+- Treating an empty secret placeholder as permission to add an integration
+- Assuming an example file provides runtime type validation
+- Letting documentation and the implemented settings model drift apart
+
+### Best Practices
+
+- Keep `.env.example` safe to commit and `.env` ignored.
+- Use non-secret defaults only where development behavior is unambiguous.
+- Leave secret placeholders empty.
+- Give application variables a consistent prefix.
+- Keep the contract minimal and add settings only when requirements demand
+  them.
+- Validate and type the contract in application code separately.

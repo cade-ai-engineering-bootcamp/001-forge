@@ -79,6 +79,26 @@ When finished, leave the virtual environment with:
 deactivate
 ```
 
+## Environment Configuration
+
+`.env.example` documents Forge's supported environment variables without
+containing real secrets. Copy it to the ignored `.env` file for local values:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Purpose |
+| --- | --- |
+| `FORGE_ENVIRONMENT` | Runtime environment; planned values are `development`, `test`, and `production`. |
+| `FORGE_LOG_LEVEL` | Minimum logging level. |
+| `FORGE_LOG_JSON` | Selects JSON logs when `true` and human-readable logs when `false`. |
+| `FORGE_API_KEY` | Optional secret used to demonstrate secret-safe configuration handling. |
+
+The committed example is a contract, not a place for credentials. `.env` and
+environment-specific variants such as `.env.local` remain ignored. Typed
+loading and validation of these values will be added in the next feature.
+
 ## Local Quality Checks
 
 Verify that Python files match Black's formatting rules:
@@ -120,6 +140,7 @@ package without adding `src` directly to Python's import path.
 │   └── forge/           # Installable Python import package
 ├── tests/
 │   └── unit/            # Fast, isolated package tests
+├── .env.example        # Safe environment-variable contract
 ├── .python-version     # Required Python interpreter version
 ├── CHANGELOG.md        # Notable project changes
 ├── LICENSE             # MIT license

@@ -333,3 +333,42 @@ package test, without modifying production behavior or hiding packaging issues.
 Begin Feature 3.1 — Define the environment contract in `.env.example`. Create
 the Step 3 branch only after Step 2 is reviewed and merged. Do not begin Feature
 3.1 without separate approval.
+
+## 2026-08-11 — Feature 3.1: Environment Contract
+
+### Session Goal
+
+Define Forge's supported environment variables in a safe, committed example
+without implementing configuration loading or validation.
+
+### Work Completed
+
+- Added `.env.example` with development-safe values for the runtime
+  environment, logging level, and logging format.
+- Declared an empty optional API key solely to establish the project's
+  secret-handling contract.
+- Documented how `.env.example` differs from ignored local `.env` files.
+- Documented each variable's responsibility and the boundary of this feature.
+
+### Validation Performed
+
+- Confirmed `.env` and `.env.local` are ignored by Git.
+- Confirmed `.env.example` remains trackable.
+- Confirmed the example contains no real secret value.
+- Confirmed frozen dependency synchronization and all established quality
+  checks still pass.
+- Confirmed no source, test, dependency, or lockfile changes were introduced.
+
+### Scope Notes
+
+- No model provider, authentication, database, host, or port configuration was
+  added.
+- No settings model, `.env` loader, global settings object, or configuration
+  tests were added.
+- `FORGE_API_KEY` exists only to demonstrate safe secret handling in later
+  features; it does not authorize an external integration.
+
+### Next Starting Point
+
+Review Feature 3.2 — Implement the typed settings model and controlled loading
+function. Do not begin Feature 3.2 without separate approval.
