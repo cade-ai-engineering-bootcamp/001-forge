@@ -418,3 +418,43 @@ routine representations from exposing credentials.
 - Use secret-aware types and reveal values only at the integration boundary.
 - Return fresh settings objects unless caching has a demonstrated need.
 - Pass settings explicitly to keep dependencies visible and testable.
+
+## Testing Environment-Driven Configuration
+
+### Simple Explanation
+
+Configuration tests temporarily control environment variables and dotenv
+files, load a settings object, and then verify the resulting typed values or
+validation errors. Each test must begin from a known environment.
+
+### Why It Exists
+
+A test that inherits a developer's shell variables or reads their local `.env`
+can pass on one machine and fail on another. Cached settings can also preserve
+values from an earlier test and make results depend on execution order.
+
+### Professional Use
+
+Teams remove relevant environment variables before each test, create dotenv
+files under the test framework's temporary directory, and restore process
+state automatically afterward. They test source precedence and failure paths
+as part of the public configuration contract.
+
+### Common Mistakes
+
+- Reading the repository's real `.env` during a unit test
+- Depending on whichever variables exist in the developer's shell
+- Changing `os.environ` without automatic cleanup
+- Reusing a cached settings object between test cases
+- Testing only valid inputs and defaults
+- Printing revealed secrets in assertions or diagnostic output
+
+### Best Practices
+
+- Clear every application-owned variable before each test.
+- Disable dotenv loading when a test only needs process variables or defaults.
+- Use temporary files for dotenv scenarios.
+- Verify environment variables take precedence over file values.
+- Assert validation errors identify the affected field.
+- Exercise secret representations without emitting revealed values.
+- Confirm repeated loads are independent and order-insensitive.

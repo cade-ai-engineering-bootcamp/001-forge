@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 39% (12 of 31 features complete)
-- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness
-- **Current step:** Step 3 — Typed Configuration and Secret Safety
-- **Current feature:** Feature 3.3 — Test defaults, overrides, invalid values, and secret representation
-- **Estimated remaining focused time:** Approximately 6 hours 40 minutes
+- **Overall progress:** 42% (13 of 31 features complete)
+- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety
+- **Current step:** Step 4 — Structured Logging and Error Conventions
+- **Current feature:** Feature 4.1 — Configure idempotent human-readable and JSON logging modes
+- **Estimated remaining focused time:** Approximately 6 hours 15 minutes
 
 ## Completed Work
 
@@ -38,10 +38,11 @@ specific AI or business logic.
 - [x] Configured Pytest, coverage, test discovery, and the first package test.
 - [x] Defined the safe environment-variable contract in `.env.example`.
 - [x] Implemented typed settings and controlled dotenv loading.
+- [x] Tested configuration defaults, overrides, validation, and secret safety.
 
 ## Remaining Work
 
-- [ ] Complete Steps 3–9 and the graduation review.
+- [ ] Complete Steps 4–9 and the graduation review.
 - [ ] Verify all local, container, and CI quality gates.
 - [ ] Demonstrate that a new project can start from Forge in under 10 minutes.
 
@@ -372,7 +373,7 @@ Secrets must never be committed or casually exposed.
 
 - [x] **3.1** Define the environment contract in `.env.example`.
 - [x] **3.2** Implement the typed settings model and controlled loading function.
-- [ ] **3.3** Test defaults, overrides, invalid values, and secret representation.
+- [x] **3.3** Test defaults, overrides, invalid values, and secret representation.
 
 ### Learning Objectives
 

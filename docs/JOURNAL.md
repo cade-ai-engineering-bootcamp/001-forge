@@ -416,3 +416,50 @@ without introducing global configuration state.
 
 Review Feature 3.3 — Test defaults, overrides, invalid values, and secret
 representation. Do not begin Feature 3.3 without separate approval.
+
+## 2026-08-11 — Feature 3.3: Configuration Tests
+
+### Session Goal
+
+Prove the typed configuration contract with isolated tests and restore the
+project's coverage gate without changing production behavior.
+
+### Work Completed
+
+- Added an automatic fixture that removes every supported `FORGE_` variable
+  before each test.
+- Tested development-safe defaults and confirmed repeated loads return
+  independent settings instances.
+- Tested typed dotenv loading and process-environment precedence with temporary
+  files.
+- Tested useful validation failures for invalid environment, log-level, and
+  boolean values.
+- Tested empty secret handling and masked secret representations in strings,
+  representations, and captured log output.
+
+### Validation Performed
+
+- Confirmed the configuration test module passes independently.
+- Confirmed the full test suite passes with branch coverage above the required
+  90% threshold.
+- Confirmed tests do not read the developer's real `.env` file or inherit
+  supported variables from the shell.
+- Confirmed Black, Ruff, strict MyPy, and frozen dependency synchronization
+  pass.
+- Confirmed production source, dependencies, and the lockfile remain
+  unchanged.
+- Confirmed the patch has no whitespace errors.
+
+### Scope Notes
+
+- No production logging configuration or logger behavior was introduced.
+- The captured-log assertion only verifies that the existing settings
+  representation remains secret-safe when logged.
+- No production source, dependency, lockfile, or package API changes were
+  added.
+
+### Next Starting Point
+
+Review Step 4 and Feature 4.1 — Configure idempotent human-readable and JSON
+logging modes. Create the Step 4 branch only after Step 3 is reviewed and
+merged. Do not begin Feature 4.1 without separate approval.

@@ -22,5 +22,7 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
 - Safe example contract for Forge environment variables and optional secrets.
 - Typed settings model with validated values, masked secrets, and controlled
   dotenv loading.
+- Isolated configuration tests for defaults, overrides, validation failures,
+  fresh loading, and secret-safe representations.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main
