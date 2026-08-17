@@ -506,3 +506,46 @@ of global root logging or duplicating messages after repeated configuration.
 
 Review Feature 4.2 — Add contextual fields and explicit sensitive-data rules.
 Do not begin Feature 4.2 without separate approval.
+
+## 2026-08-17 — Feature 4.2: Context and Sensitive-Data Rules
+
+### Session Goal
+
+Add async-safe contextual fields and one explicit redaction policy shared by
+all supported logging styles and renderers.
+
+### Work Completed
+
+- Added functions to bind and clear fields in the current execution context.
+- Merged context variables into structured and standard-library events.
+- Added recursive redaction for documented sensitive field names and suffixes.
+- Normalized field matching across capitalization and hyphen conventions.
+- Added standard-library `extra` fields to the shared processing pipeline.
+- Documented safe structured logging and the prohibition against embedding
+  credentials in free-form messages.
+- Added tests for context lifecycle, nested data, both renderers, standard-
+  library fields, redaction, and safe-field preservation.
+
+### Validation Performed
+
+- Confirmed bound context appears in emitted records and clears explicitly.
+- Confirmed top-level, contextual, nested, and standard-library sensitive
+  fields render as `[REDACTED]`.
+- Confirmed dummy secret values do not appear in human-readable or JSON test
+  output.
+- Confirmed safe fields such as `token_count` remain visible.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+- Confirmed dependencies and the lockfile remain unchanged.
+
+### Scope Notes
+
+- No value-pattern scanning or free-form message rewriting was added.
+- No application error types, exception policy, FastAPI, or Uvicorn integration
+  was added.
+- No dependency or configuration-setting changes were added.
+
+### Next Starting Point
+
+Review Feature 4.3 — Define the application error hierarchy and test safe
+behavior. Do not begin Feature 4.3 without separate approval.

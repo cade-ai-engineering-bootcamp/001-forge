@@ -26,5 +26,7 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
   fresh loading, and secret-safe representations.
 - Idempotent Forge logging with human-readable and JSON renderers, UTC
   timestamps, level filtering, and standard-library interoperability.
+- Async-safe contextual logging with recursive, key-based sensitive-field
+  redaction across structured and standard-library records.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

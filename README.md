@@ -140,6 +140,28 @@ timestamps and normalized levels. Repeated configuration replaces Forge's
 existing handler instead of duplicating messages, and it does not take
 ownership of the process root logger.
 
+Bind fields that should accompany subsequent events in the current execution
+context, then clear them at the boundary where that work ends:
+
+```python
+from forge.logging import bind_context, clear_context
+
+bind_context(request_id="req-123", component="health")
+logger.info("request_started")
+clear_context()
+```
+
+Forge masks values stored under sensitive field names such as `api_key`,
+`authorization`, `cookie`, `password`, `secret`, and `token`, including common
+prefixed forms such as `access_token` or `client_secret`. Matching is
+case-insensitive, works through nested mappings and sequences, and applies to
+both Structlog fields and standard-library `extra` fields. Safe operational
+fields such as `token_count` remain visible.
+
+Redaction is field-name based. Never place credentials directly in an event
+name or interpolate them into a free-form log message, where their meaning
+cannot be identified reliably.
+
 ## Local Quality Checks
 
 Verify that Python files match Black's formatting rules:

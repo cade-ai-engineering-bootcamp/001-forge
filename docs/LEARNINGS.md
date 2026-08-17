@@ -498,3 +498,43 @@ stable structured data.
 - Write service logs to standard output.
 - Replace owned handlers during reconfiguration.
 - Test the rendered output and repeated-configuration behavior.
+
+## Contextual Logging and Redaction Boundaries
+
+### Simple Explanation
+
+Contextual logging attaches fields such as a request identifier to every event
+created during one unit of work. Redaction replaces values under sensitive
+field names before a renderer converts the event to text or JSON.
+
+### Why It Exists
+
+Context connects related events during debugging, while redaction reduces the
+risk of credentials reaching log storage. Async-aware context prevents one
+concurrent request from using another request's identifiers.
+
+### Professional Use
+
+Applications bind context at a request, job, or command boundary and clear it
+when that work finishes. A shared processor enforces the same field policy for
+local output, production JSON, and standard-library records.
+
+### Common Mistakes
+
+- Storing request context in one mutable global dictionary
+- Forgetting to clear context at the end of a unit of work
+- Redacting only the top level of nested payloads
+- Applying different security rules to different renderers
+- Removing safe metrics such as `token_count` through broad substring matching
+- Interpolating credentials into free-form event messages
+- Assuming key-based redaction can recognize an unlabeled secret value
+
+### Best Practices
+
+- Use context variables for concurrent or asynchronous work.
+- Bind context at entry boundaries and clear it at exit boundaries.
+- Prefer named structured fields over interpolated messages.
+- Normalize field names before applying a documented policy.
+- Redact recursively before rendering.
+- Apply one processor to every supported logging path.
+- Test with dummy values and assert they never reach rendered output.
