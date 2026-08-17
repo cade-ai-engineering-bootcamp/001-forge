@@ -458,3 +458,123 @@ as part of the public configuration contract.
 - Assert validation errors identify the affected field.
 - Exercise secret representations without emitting revealed values.
 - Confirm repeated loads are independent and order-insensitive.
+
+## Structured Logging Modes and Ownership
+
+### Simple Explanation
+
+Structured logging represents each event as named data instead of assembling
+an unstructured sentence. The same event can be rendered for a person at a
+terminal or as JSON for a log-processing system.
+
+### Why It Exists
+
+Consistent fields make production logs searchable and machine-readable.
+Explicit logger ownership also prevents repeated setup or embedded libraries
+from duplicating output and disrupting unrelated logging systems.
+
+### Professional Use
+
+Applications configure logging at their startup boundary, emit records beneath
+an owned logger namespace, and send container-friendly output to standard
+output. Local renderers favor readability, while production renderers favor
+stable structured data.
+
+### Common Mistakes
+
+- Adding a new handler every time configuration runs
+- Configuring logging as an import side effect
+- Replacing the root logger inside reusable infrastructure
+- Sending human-readable colors into machine log collectors
+- Building unrelated pipelines for structured and standard-library records
+- Assuming a log level changes records that were already created
+
+### Best Practices
+
+- Configure logging explicitly during application startup.
+- Give the application a named logger hierarchy it owns.
+- Share processors between structured and standard-library records.
+- Emit UTC timestamps and normalized level names.
+- Write service logs to standard output.
+- Replace owned handlers during reconfiguration.
+- Test the rendered output and repeated-configuration behavior.
+
+## Contextual Logging and Redaction Boundaries
+
+### Simple Explanation
+
+Contextual logging attaches fields such as a request identifier to every event
+created during one unit of work. Redaction replaces values under sensitive
+field names before a renderer converts the event to text or JSON.
+
+### Why It Exists
+
+Context connects related events during debugging, while redaction reduces the
+risk of credentials reaching log storage. Async-aware context prevents one
+concurrent request from using another request's identifiers.
+
+### Professional Use
+
+Applications bind context at a request, job, or command boundary and clear it
+when that work finishes. A shared processor enforces the same field policy for
+local output, production JSON, and standard-library records.
+
+### Common Mistakes
+
+- Storing request context in one mutable global dictionary
+- Forgetting to clear context at the end of a unit of work
+- Redacting only the top level of nested payloads
+- Applying different security rules to different renderers
+- Removing safe metrics such as `token_count` through broad substring matching
+- Interpolating credentials into free-form event messages
+- Assuming key-based redaction can recognize an unlabeled secret value
+
+### Best Practices
+
+- Use context variables for concurrent or asynchronous work.
+- Bind context at entry boundaries and clear it at exit boundaries.
+- Prefer named structured fields over interpolated messages.
+- Normalize field names before applying a documented policy.
+- Redact recursively before rendering.
+- Apply one processor to every supported logging path.
+- Test with dummy values and assert they never reach rendered output.
+
+## Public Errors and Internal Diagnostics
+
+### Simple Explanation
+
+An application error can carry two different kinds of information: a stable,
+safe explanation for a caller and diagnostic information for trusted code.
+Keeping them separate prevents internal implementation details from becoming
+part of a public response by accident.
+
+### Why It Exists
+
+Raw exceptions may contain file paths, dependency names, query fragments, or
+other operational details. Stable error codes let callers respond consistently
+without depending on changing diagnostic text.
+
+### Professional Use
+
+Application layers raise framework-independent errors. Boundary adapters map
+those errors to HTTP responses, command exit codes, job states, or other
+transport-specific results. Low-level exceptions remain connected through
+exception chaining for diagnosis.
+
+### Common Mistakes
+
+- Returning `str()` from an arbitrary exception to a user
+- Allowing each error instance to invent a new public message
+- Adding HTTP status codes to reusable application errors
+- Dropping the original exception instead of chaining it
+- Logging internal diagnostics without considering sensitive data
+- Treating an internal-detail field as a safe place for credentials
+
+### Best Practices
+
+- Use fixed public messages and stable machine-readable codes.
+- Keep internal diagnostics out of exception arguments and public payloads.
+- Catch expected failures through one shared base type.
+- Preserve root causes with `raise ... from error`.
+- Translate errors only at the relevant system boundary.
+- Test strings, representations, serialization, logging, and chaining.

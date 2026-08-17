@@ -244,3 +244,117 @@ Let process environment variables take precedence over dotenv values.
 - Each uncached call performs configuration loading again; callers own the
   lifetime of the returned object.
 - Secret access remains explicit, and standard representations stay masked.
+
+## Decision 009 — Configure Only the Forge Logger Namespace
+
+- **Status:** Accepted
+- **Date:** 2026-08-17
+
+### Context
+
+Forge needs consistent local and machine-readable logs without duplicating
+messages when configuration runs more than once. Replacing the process root
+logger would also interfere with handlers owned by a host application, test
+runner, or server.
+
+### Decision
+
+Bridge Structlog through Python's standard logging system and configure the
+named `forge` logger hierarchy. Write to standard output with UTC timestamps
+and normalized levels. Select a color-free console renderer for local output
+or a JSON renderer for machine processing. Replace Forge's existing handler on
+each configuration call and leave the root logger untouched.
+
+### Alternatives Considered
+
+- Configure Structlog with a direct print logger.
+- Replace the process root logger and all of its handlers.
+- Add a handler on every configuration call.
+- Maintain separate processing pipelines for standard-library and structured
+  logs.
+
+### Consequences
+
+- Structlog and standard-library records under `forge` share one renderer.
+- Repeated configuration does not multiply handlers or messages.
+- Host applications retain control over their root and third-party loggers.
+- Forge modules must use logger names in the `forge` hierarchy.
+- Uvicorn and other framework logging remain separate until an application
+  boundary explicitly integrates them.
+
+## Decision 010 — Redact Sensitive Log Fields Before Rendering
+
+- **Status:** Accepted
+- **Date:** 2026-08-17
+
+### Context
+
+Context makes logs more useful, but arbitrary structured data can contain
+credentials. Separate redaction behavior for each renderer or logging API would
+create gaps, while scanning values cannot reliably distinguish secrets from
+ordinary text.
+
+### Decision
+
+Merge async-safe context variables into each event and apply one recursive,
+key-based redaction processor before human-readable or JSON rendering. Match a
+documented set of case-insensitive field names and suffixes after normalizing
+hyphens to underscores. Apply the same processor to Structlog records and
+standard-library `extra` fields.
+
+### Alternatives Considered
+
+- Scan values using credential-like patterns.
+- Redact only top-level fields.
+- Maintain separate policies for each renderer.
+- Depend entirely on callers to mask sensitive fields.
+- Remove every field containing the word `token`, including safe metrics such
+  as `token_count`.
+
+### Consequences
+
+- Named sensitive fields are masked consistently in supported nested data.
+- Async tasks can bind context without sharing one mutable global dictionary.
+- Safe fields that do not match the explicit policy remain useful.
+- Secrets embedded in free-form messages cannot be detected reliably and are
+  prohibited by documented usage rules.
+- New credential field names must be added deliberately as the system evolves.
+
+## Decision 011 — Separate Fixed Public Errors from Internal Diagnostics
+
+- **Status:** Accepted
+- **Date:** 2026-08-17
+
+### Context
+
+Callers need stable error codes and safe messages, while developers need enough
+information to diagnose failures. Allowing arbitrary exception messages to
+cross a system boundary can reveal implementation details, and adding HTTP
+metadata would couple reusable application errors to one adapter.
+
+### Decision
+
+Define a framework-independent `ApplicationError` hierarchy with class-level
+codes and fixed public messages. Store optional internal diagnostics separately
+from the exception arguments, expose only code and public message through
+`to_public_dict()`, and use Python exception chaining to retain low-level
+causes. Leave HTTP translation to the API boundary.
+
+### Alternatives Considered
+
+- Return raw exception messages to callers.
+- Put HTTP status codes on application exceptions.
+- Accept a caller-provided public message for every error instance.
+- Discard internal diagnostics and original causes.
+- Create unrelated exception classes with no shared base contract.
+
+### Consequences
+
+- Callers can depend on stable, machine-readable codes.
+- Normal strings, representations, and public dictionaries omit internal
+  diagnostics.
+- Workers, command-line tools, and HTTP services can reuse the same errors.
+- Trusted code must treat `internal_detail` as diagnostic-only and keep it free
+  of credentials.
+- Framework adapters must explicitly map error types to their own transport
+  semantics.

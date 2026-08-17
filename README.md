@@ -113,6 +113,78 @@ inject configuration explicitly instead of depending on global state. Invalid
 enum or boolean values raise a Pydantic validation error, and `FORGE_API_KEY`
 uses Pydantic's masked `SecretStr` representation.
 
+## Structured Logging
+
+Configure logging once at the application boundary using the validated
+settings, then create loggers beneath the `forge` namespace:
+
+```python
+import structlog
+
+from forge.config import load_settings
+from forge.logging import configure_logging
+
+settings = load_settings()
+configure_logging(
+    log_level=settings.log_level,
+    json_output=settings.log_json,
+)
+logger = structlog.get_logger("forge.application")
+logger.info("forge_started")
+```
+
+Human-readable mode produces deterministic, color-free console output for
+local development. JSON mode emits one valid JSON object per line for log
+collection systems. Both modes write to standard output and include UTC
+timestamps and normalized levels. Repeated configuration replaces Forge's
+existing handler instead of duplicating messages, and it does not take
+ownership of the process root logger.
+
+Bind fields that should accompany subsequent events in the current execution
+context, then clear them at the boundary where that work ends:
+
+```python
+from forge.logging import bind_context, clear_context
+
+bind_context(request_id="req-123", component="health")
+logger.info("request_started")
+clear_context()
+```
+
+Forge masks values stored under sensitive field names such as `api_key`,
+`authorization`, `cookie`, `password`, `secret`, and `token`, including common
+prefixed forms such as `access_token` or `client_secret`. Matching is
+case-insensitive, works through nested mappings and sequences, and applies to
+both Structlog fields and standard-library `extra` fields. Safe operational
+fields such as `token_count` remain visible.
+
+Redaction is field-name based. Never place credentials directly in an event
+name or interpolate them into a free-form log message, where their meaning
+cannot be identified reliably.
+
+## Application Errors
+
+Expected application failures use framework-independent errors with stable
+codes and fixed public messages:
+
+```python
+from forge.errors import DependencyUnavailableError
+
+raise DependencyUnavailableError(
+    internal_detail="The vector service timed out after five seconds."
+)
+```
+
+All known errors inherit from `ApplicationError`. Their normal string and
+representation output remains public-safe, while trusted application code may
+inspect `internal_detail` for diagnosis. `to_public_dict()` returns only the
+stable `code` and public `message` intended for a system boundary.
+
+Internal details must never contain credentials. Preserve a low-level failure
+with Python exception chaining (`raise ... from error`) instead of exposing it
+in a public message. Error classes intentionally contain no HTTP status codes;
+the future API adapter owns that translation.
+
 ## Local Quality Checks
 
 Verify that Python files match Black's formatting rules:

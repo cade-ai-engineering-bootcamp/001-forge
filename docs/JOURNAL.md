@@ -463,3 +463,132 @@ project's coverage gate without changing production behavior.
 Review Step 4 and Feature 4.1 — Configure idempotent human-readable and JSON
 logging modes. Create the Step 4 branch only after Step 3 is reviewed and
 merged. Do not begin Feature 4.1 without separate approval.
+
+## 2026-08-17 — Feature 4.1: Logging Modes
+
+### Session Goal
+
+Configure predictable human-readable and JSON logging without taking ownership
+of global root logging or duplicating messages after repeated configuration.
+
+### Work Completed
+
+- Added a standard-library logging bridge for Structlog records under the
+  `forge` logger hierarchy.
+- Added color-free console and valid JSON renderers with normalized levels and
+  UTC timestamps.
+- Added configured log-level filtering and standard-output delivery.
+- Made repeated configuration replace and close Forge's existing handler.
+- Added isolated tests for both renderers, standard-library interoperability,
+  filtering, and idempotence.
+- Documented setup, ownership boundaries, and the selected logging design.
+
+### Validation Performed
+
+- Confirmed human-readable output contains the event and normalized level.
+- Confirmed JSON output parses and contains the event, level, and UTC
+  timestamp.
+- Confirmed standard-library records under `forge` use the selected renderer.
+- Confirmed lower-priority records are filtered.
+- Confirmed repeated configuration leaves one handler and one message.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+- Confirmed dependencies and the lockfile remain unchanged.
+
+### Scope Notes
+
+- No context-variable policy or sensitive-data filtering was added.
+- No exception formatting, application errors, FastAPI, or Uvicorn integration
+  was added.
+- The process root logger remains under host-application control.
+
+### Next Starting Point
+
+Review Feature 4.2 — Add contextual fields and explicit sensitive-data rules.
+Do not begin Feature 4.2 without separate approval.
+
+## 2026-08-17 — Feature 4.2: Context and Sensitive-Data Rules
+
+### Session Goal
+
+Add async-safe contextual fields and one explicit redaction policy shared by
+all supported logging styles and renderers.
+
+### Work Completed
+
+- Added functions to bind and clear fields in the current execution context.
+- Merged context variables into structured and standard-library events.
+- Added recursive redaction for documented sensitive field names and suffixes.
+- Normalized field matching across capitalization and hyphen conventions.
+- Added standard-library `extra` fields to the shared processing pipeline.
+- Documented safe structured logging and the prohibition against embedding
+  credentials in free-form messages.
+- Added tests for context lifecycle, nested data, both renderers, standard-
+  library fields, redaction, and safe-field preservation.
+
+### Validation Performed
+
+- Confirmed bound context appears in emitted records and clears explicitly.
+- Confirmed top-level, contextual, nested, and standard-library sensitive
+  fields render as `[REDACTED]`.
+- Confirmed dummy secret values do not appear in human-readable or JSON test
+  output.
+- Confirmed safe fields such as `token_count` remain visible.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+- Confirmed dependencies and the lockfile remain unchanged.
+
+### Scope Notes
+
+- No value-pattern scanning or free-form message rewriting was added.
+- No application error types, exception policy, FastAPI, or Uvicorn integration
+  was added.
+- No dependency or configuration-setting changes were added.
+
+### Next Starting Point
+
+Review Feature 4.3 — Define the application error hierarchy and test safe
+behavior. Do not begin Feature 4.3 without separate approval.
+
+## 2026-08-17 — Feature 4.3: Application Error Hierarchy
+
+### Session Goal
+
+Define stable application errors that preserve internal diagnostics without
+coupling their safe public contract to HTTP or another framework.
+
+### Work Completed
+
+- Added a shared `ApplicationError` base with stable code, public message,
+  optional internal detail, and explicit public serialization.
+- Added invalid-input, resource-not-found, conflict, and dependency-unavailable
+  error categories.
+- Kept exception arguments and normal representations limited to fixed public
+  messages.
+- Documented exception chaining for retaining low-level causes.
+- Added tests for inheritance, stable contracts, safe representations, public
+  serialization, cause preservation, and structured logging.
+
+### Validation Performed
+
+- Confirmed every known error is catchable through `ApplicationError`.
+- Confirmed codes and public messages remain stable.
+- Confirmed internal details remain available to trusted code but absent from
+  strings, representations, public dictionaries, and rendered log output.
+- Confirmed exception chaining retains the original cause.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+- Confirmed dependencies and the lockfile remain unchanged.
+
+### Scope Notes
+
+- No HTTP status codes, FastAPI exception handlers, or response models were
+  added.
+- No logging processor, settings, dependency, or lockfile changes were added.
+- Internal diagnostics are not a safe place for credentials.
+
+### Next Starting Point
+
+Review Step 5 and Feature 5.1 — Implement the FastAPI application factory and
+runtime entry point. Create the Step 5 branch only after Step 4 is reviewed and
+merged. Do not begin Feature 5.1 without separate approval.
