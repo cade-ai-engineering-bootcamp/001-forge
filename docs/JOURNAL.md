@@ -549,3 +549,46 @@ all supported logging styles and renderers.
 
 Review Feature 4.3 — Define the application error hierarchy and test safe
 behavior. Do not begin Feature 4.3 without separate approval.
+
+## 2026-08-17 — Feature 4.3: Application Error Hierarchy
+
+### Session Goal
+
+Define stable application errors that preserve internal diagnostics without
+coupling their safe public contract to HTTP or another framework.
+
+### Work Completed
+
+- Added a shared `ApplicationError` base with stable code, public message,
+  optional internal detail, and explicit public serialization.
+- Added invalid-input, resource-not-found, conflict, and dependency-unavailable
+  error categories.
+- Kept exception arguments and normal representations limited to fixed public
+  messages.
+- Documented exception chaining for retaining low-level causes.
+- Added tests for inheritance, stable contracts, safe representations, public
+  serialization, cause preservation, and structured logging.
+
+### Validation Performed
+
+- Confirmed every known error is catchable through `ApplicationError`.
+- Confirmed codes and public messages remain stable.
+- Confirmed internal details remain available to trusted code but absent from
+  strings, representations, public dictionaries, and rendered log output.
+- Confirmed exception chaining retains the original cause.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+- Confirmed dependencies and the lockfile remain unchanged.
+
+### Scope Notes
+
+- No HTTP status codes, FastAPI exception handlers, or response models were
+  added.
+- No logging processor, settings, dependency, or lockfile changes were added.
+- Internal diagnostics are not a safe place for credentials.
+
+### Next Starting Point
+
+Review Step 5 and Feature 5.1 — Implement the FastAPI application factory and
+runtime entry point. Create the Step 5 branch only after Step 4 is reviewed and
+merged. Do not begin Feature 5.1 without separate approval.

@@ -28,5 +28,7 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
   timestamps, level filtering, and standard-library interoperability.
 - Async-safe contextual logging with recursive, key-based sensitive-field
   redaction across structured and standard-library records.
+- Framework-independent application errors with stable codes, safe public
+  messages, internal diagnostics, and explicit public serialization.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

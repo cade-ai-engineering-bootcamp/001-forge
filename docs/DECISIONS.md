@@ -319,3 +319,42 @@ standard-library `extra` fields.
 - Secrets embedded in free-form messages cannot be detected reliably and are
   prohibited by documented usage rules.
 - New credential field names must be added deliberately as the system evolves.
+
+## Decision 011 — Separate Fixed Public Errors from Internal Diagnostics
+
+- **Status:** Accepted
+- **Date:** 2026-08-17
+
+### Context
+
+Callers need stable error codes and safe messages, while developers need enough
+information to diagnose failures. Allowing arbitrary exception messages to
+cross a system boundary can reveal implementation details, and adding HTTP
+metadata would couple reusable application errors to one adapter.
+
+### Decision
+
+Define a framework-independent `ApplicationError` hierarchy with class-level
+codes and fixed public messages. Store optional internal diagnostics separately
+from the exception arguments, expose only code and public message through
+`to_public_dict()`, and use Python exception chaining to retain low-level
+causes. Leave HTTP translation to the API boundary.
+
+### Alternatives Considered
+
+- Return raw exception messages to callers.
+- Put HTTP status codes on application exceptions.
+- Accept a caller-provided public message for every error instance.
+- Discard internal diagnostics and original causes.
+- Create unrelated exception classes with no shared base contract.
+
+### Consequences
+
+- Callers can depend on stable, machine-readable codes.
+- Normal strings, representations, and public dictionaries omit internal
+  diagnostics.
+- Workers, command-line tools, and HTTP services can reuse the same errors.
+- Trusted code must treat `internal_detail` as diagnostic-only and keep it free
+  of credentials.
+- Framework adapters must explicitly map error types to their own transport
+  semantics.

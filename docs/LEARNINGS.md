@@ -538,3 +538,43 @@ local output, production JSON, and standard-library records.
 - Redact recursively before rendering.
 - Apply one processor to every supported logging path.
 - Test with dummy values and assert they never reach rendered output.
+
+## Public Errors and Internal Diagnostics
+
+### Simple Explanation
+
+An application error can carry two different kinds of information: a stable,
+safe explanation for a caller and diagnostic information for trusted code.
+Keeping them separate prevents internal implementation details from becoming
+part of a public response by accident.
+
+### Why It Exists
+
+Raw exceptions may contain file paths, dependency names, query fragments, or
+other operational details. Stable error codes let callers respond consistently
+without depending on changing diagnostic text.
+
+### Professional Use
+
+Application layers raise framework-independent errors. Boundary adapters map
+those errors to HTTP responses, command exit codes, job states, or other
+transport-specific results. Low-level exceptions remain connected through
+exception chaining for diagnosis.
+
+### Common Mistakes
+
+- Returning `str()` from an arbitrary exception to a user
+- Allowing each error instance to invent a new public message
+- Adding HTTP status codes to reusable application errors
+- Dropping the original exception instead of chaining it
+- Logging internal diagnostics without considering sensitive data
+- Treating an internal-detail field as a safe place for credentials
+
+### Best Practices
+
+- Use fixed public messages and stable machine-readable codes.
+- Keep internal diagnostics out of exception arguments and public payloads.
+- Catch expected failures through one shared base type.
+- Preserve root causes with `raise ... from error`.
+- Translate errors only at the relevant system boundary.
+- Test strings, representations, serialization, logging, and chaining.

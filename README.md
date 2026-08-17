@@ -162,6 +162,29 @@ Redaction is field-name based. Never place credentials directly in an event
 name or interpolate them into a free-form log message, where their meaning
 cannot be identified reliably.
 
+## Application Errors
+
+Expected application failures use framework-independent errors with stable
+codes and fixed public messages:
+
+```python
+from forge.errors import DependencyUnavailableError
+
+raise DependencyUnavailableError(
+    internal_detail="The vector service timed out after five seconds."
+)
+```
+
+All known errors inherit from `ApplicationError`. Their normal string and
+representation output remains public-safe, while trusted application code may
+inspect `internal_detail` for diagnosis. `to_public_dict()` returns only the
+stable `code` and public `message` intended for a system boundary.
+
+Internal details must never contain credentials. Preserve a low-level failure
+with Python exception chaining (`raise ... from error`) instead of exposing it
+in a public message. Error classes intentionally contain no HTTP status codes;
+the future API adapter owns that translation.
+
 ## Local Quality Checks
 
 Verify that Python files match Black's formatting rules:

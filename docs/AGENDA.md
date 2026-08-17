@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 48% (15 of 31 features complete)
-- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety
-- **Current step:** Step 4 — Structured Logging and Error Conventions
-- **Current feature:** Feature 4.3 — Define the application error hierarchy and test safe behavior
-- **Estimated remaining focused time:** Approximately 5 hours 45 minutes
+- **Overall progress:** 52% (16 of 31 features complete)
+- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions
+- **Current step:** Step 5 — FastAPI-Ready Application Boundary
+- **Current feature:** Feature 5.1 — Implement the FastAPI application factory and runtime entry point
+- **Estimated remaining focused time:** Approximately 5 hours 15 minutes
 
 ## Completed Work
 
@@ -41,10 +41,11 @@ specific AI or business logic.
 - [x] Tested configuration defaults, overrides, validation, and secret safety.
 - [x] Configured and tested idempotent human-readable and JSON logging.
 - [x] Added contextual fields and explicit sensitive-data redaction rules.
+- [x] Defined and tested framework-independent application errors.
 
 ## Remaining Work
 
-- [ ] Complete Steps 4–9 and the graduation review.
+- [ ] Complete Steps 5–9 and the graduation review.
 - [ ] Verify all local, container, and CI quality gates.
 - [ ] Demonstrate that a new project can start from Forge in under 10 minutes.
 
@@ -433,7 +434,7 @@ prevent internal details from leaking to users.
 
 - [x] **4.1** Configure idempotent human-readable and JSON logging modes.
 - [x] **4.2** Add contextual fields and explicit sensitive-data rules.
-- [ ] **4.3** Define the application error hierarchy and test safe behavior.
+- [x] **4.3** Define the application error hierarchy and test safe behavior.
 
 ### Learning Objectives
 
