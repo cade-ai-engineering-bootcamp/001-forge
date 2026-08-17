@@ -16,10 +16,10 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 42% (13 of 31 features complete)
+- **Overall progress:** 45% (14 of 31 features complete)
 - **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety
 - **Current step:** Step 4 — Structured Logging and Error Conventions
-- **Current feature:** Feature 4.1 — Configure idempotent human-readable and JSON logging modes
+- **Current feature:** Feature 4.2 — Add contextual fields and explicit sensitive-data rules
 - **Estimated remaining focused time:** Approximately 6 hours 15 minutes
 
 ## Completed Work
@@ -39,6 +39,7 @@ specific AI or business logic.
 - [x] Defined the safe environment-variable contract in `.env.example`.
 - [x] Implemented typed settings and controlled dotenv loading.
 - [x] Tested configuration defaults, overrides, validation, and secret safety.
+- [x] Configured and tested idempotent human-readable and JSON logging.
 
 ## Remaining Work
 
@@ -429,7 +430,7 @@ prevent internal details from leaking to users.
 
 ### Features
 
-- [ ] **4.1** Configure idempotent human-readable and JSON logging modes.
+- [x] **4.1** Configure idempotent human-readable and JSON logging modes.
 - [ ] **4.2** Add contextual fields and explicit sensitive-data rules.
 - [ ] **4.3** Define the application error hierarchy and test safe behavior.
 

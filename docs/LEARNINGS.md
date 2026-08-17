@@ -458,3 +458,43 @@ as part of the public configuration contract.
 - Assert validation errors identify the affected field.
 - Exercise secret representations without emitting revealed values.
 - Confirm repeated loads are independent and order-insensitive.
+
+## Structured Logging Modes and Ownership
+
+### Simple Explanation
+
+Structured logging represents each event as named data instead of assembling
+an unstructured sentence. The same event can be rendered for a person at a
+terminal or as JSON for a log-processing system.
+
+### Why It Exists
+
+Consistent fields make production logs searchable and machine-readable.
+Explicit logger ownership also prevents repeated setup or embedded libraries
+from duplicating output and disrupting unrelated logging systems.
+
+### Professional Use
+
+Applications configure logging at their startup boundary, emit records beneath
+an owned logger namespace, and send container-friendly output to standard
+output. Local renderers favor readability, while production renderers favor
+stable structured data.
+
+### Common Mistakes
+
+- Adding a new handler every time configuration runs
+- Configuring logging as an import side effect
+- Replacing the root logger inside reusable infrastructure
+- Sending human-readable colors into machine log collectors
+- Building unrelated pipelines for structured and standard-library records
+- Assuming a log level changes records that were already created
+
+### Best Practices
+
+- Configure logging explicitly during application startup.
+- Give the application a named logger hierarchy it owns.
+- Share processors between structured and standard-library records.
+- Emit UTC timestamps and normalized level names.
+- Write service logs to standard output.
+- Replace owned handlers during reconfiguration.
+- Test the rendered output and repeated-configuration behavior.

@@ -463,3 +463,46 @@ project's coverage gate without changing production behavior.
 Review Step 4 and Feature 4.1 — Configure idempotent human-readable and JSON
 logging modes. Create the Step 4 branch only after Step 3 is reviewed and
 merged. Do not begin Feature 4.1 without separate approval.
+
+## 2026-08-17 — Feature 4.1: Logging Modes
+
+### Session Goal
+
+Configure predictable human-readable and JSON logging without taking ownership
+of global root logging or duplicating messages after repeated configuration.
+
+### Work Completed
+
+- Added a standard-library logging bridge for Structlog records under the
+  `forge` logger hierarchy.
+- Added color-free console and valid JSON renderers with normalized levels and
+  UTC timestamps.
+- Added configured log-level filtering and standard-output delivery.
+- Made repeated configuration replace and close Forge's existing handler.
+- Added isolated tests for both renderers, standard-library interoperability,
+  filtering, and idempotence.
+- Documented setup, ownership boundaries, and the selected logging design.
+
+### Validation Performed
+
+- Confirmed human-readable output contains the event and normalized level.
+- Confirmed JSON output parses and contains the event, level, and UTC
+  timestamp.
+- Confirmed standard-library records under `forge` use the selected renderer.
+- Confirmed lower-priority records are filtered.
+- Confirmed repeated configuration leaves one handler and one message.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+- Confirmed dependencies and the lockfile remain unchanged.
+
+### Scope Notes
+
+- No context-variable policy or sensitive-data filtering was added.
+- No exception formatting, application errors, FastAPI, or Uvicorn integration
+  was added.
+- The process root logger remains under host-application control.
+
+### Next Starting Point
+
+Review Feature 4.2 — Add contextual fields and explicit sensitive-data rules.
+Do not begin Feature 4.2 without separate approval.

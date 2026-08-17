@@ -113,6 +113,33 @@ inject configuration explicitly instead of depending on global state. Invalid
 enum or boolean values raise a Pydantic validation error, and `FORGE_API_KEY`
 uses Pydantic's masked `SecretStr` representation.
 
+## Structured Logging
+
+Configure logging once at the application boundary using the validated
+settings, then create loggers beneath the `forge` namespace:
+
+```python
+import structlog
+
+from forge.config import load_settings
+from forge.logging import configure_logging
+
+settings = load_settings()
+configure_logging(
+    log_level=settings.log_level,
+    json_output=settings.log_json,
+)
+logger = structlog.get_logger("forge.application")
+logger.info("forge_started")
+```
+
+Human-readable mode produces deterministic, color-free console output for
+local development. JSON mode emits one valid JSON object per line for log
+collection systems. Both modes write to standard output and include UTC
+timestamps and normalized levels. Repeated configuration replaces Forge's
+existing handler instead of duplicating messages, and it does not take
+ownership of the process root logger.
+
 ## Local Quality Checks
 
 Verify that Python files match Black's formatting rules:

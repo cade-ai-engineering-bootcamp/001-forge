@@ -24,5 +24,7 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
   dotenv loading.
 - Isolated configuration tests for defaults, overrides, validation failures,
   fresh loading, and secret-safe representations.
+- Idempotent Forge logging with human-readable and JSON renderers, UTC
+  timestamps, level filtering, and standard-library interoperability.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

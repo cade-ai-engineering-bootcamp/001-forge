@@ -244,3 +244,40 @@ Let process environment variables take precedence over dotenv values.
 - Each uncached call performs configuration loading again; callers own the
   lifetime of the returned object.
 - Secret access remains explicit, and standard representations stay masked.
+
+## Decision 009 — Configure Only the Forge Logger Namespace
+
+- **Status:** Accepted
+- **Date:** 2026-08-17
+
+### Context
+
+Forge needs consistent local and machine-readable logs without duplicating
+messages when configuration runs more than once. Replacing the process root
+logger would also interfere with handlers owned by a host application, test
+runner, or server.
+
+### Decision
+
+Bridge Structlog through Python's standard logging system and configure the
+named `forge` logger hierarchy. Write to standard output with UTC timestamps
+and normalized levels. Select a color-free console renderer for local output
+or a JSON renderer for machine processing. Replace Forge's existing handler on
+each configuration call and leave the root logger untouched.
+
+### Alternatives Considered
+
+- Configure Structlog with a direct print logger.
+- Replace the process root logger and all of its handlers.
+- Add a handler on every configuration call.
+- Maintain separate processing pipelines for standard-library and structured
+  logs.
+
+### Consequences
+
+- Structlog and standard-library records under `forge` share one renderer.
+- Repeated configuration does not multiply handlers or messages.
+- Host applications retain control over their root and third-party loggers.
+- Forge modules must use logger names in the `forge` hierarchy.
+- Uvicorn and other framework logging remain separate until an application
+  boundary explicitly integrates them.
