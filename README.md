@@ -207,8 +207,21 @@ from forge.config import Settings
 app = create_app(settings=Settings())
 ```
 
-The application intentionally has no business routes yet. The typed health
-endpoint is introduced separately in Feature 5.2.
+Check that the running HTTP process can respond:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Forge returns a typed liveness response with HTTP status `200 OK`:
+
+```json
+{"status":"ok"}
+```
+
+This endpoint confirms only that the Forge process is running and responsive.
+It does not report dependency readiness, and Forge intentionally has no
+business routes.
 
 ## Local Quality Checks
 

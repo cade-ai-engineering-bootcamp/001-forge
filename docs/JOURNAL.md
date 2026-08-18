@@ -633,3 +633,38 @@ entry point without adding HTTP behavior scheduled for later features.
 
 Review Feature 5.2 — Add a typed `GET /health` endpoint. Do not begin Feature
 5.2 without separate approval.
+
+## 2026-08-18 — Feature 5.2: Typed Health Endpoint
+
+### Session Goal
+
+Add one stable HTTP liveness contract without introducing business behavior,
+dependency checks, or error translation.
+
+### Work Completed
+
+- Added a Pydantic response model whose status is constrained to `"ok"`.
+- Registered an asynchronous `GET /health` route on each factory-created app.
+- Returned the typed response with an explicit `200 OK` contract.
+- Added a focused HTTPX ASGI test for routing, status, content type, response
+  data, and the OpenAPI response-model reference.
+- Documented server health-check usage and liveness semantics.
+
+### Validation Performed
+
+- Confirmed `GET /health` returns HTTP 200 and exactly `{"status": "ok"}`.
+- Confirmed the response uses the JSON media type.
+- Confirmed OpenAPI describes the route through `HealthResponse`.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+
+### Scope Notes
+
+- The endpoint reports process liveness, not external dependency readiness.
+- No application-error translation or unexpected-error handling was added.
+- No additional routes, dependencies, settings, or middleware were added.
+
+### Next Starting Point
+
+Review Feature 5.3 — Translate application errors at the API boundary and add
+integration tests. Do not begin Feature 5.3 without separate approval.

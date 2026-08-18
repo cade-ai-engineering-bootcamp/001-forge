@@ -1,12 +1,23 @@
+import asyncio
 import importlib
 import sys
 from importlib.metadata import version
 
+import httpx
 from fastapi import FastAPI
 
 import forge.api
 from forge.api import create_app
 from forge.config import Environment, LogLevel, Settings
+
+
+async def request_health(app: FastAPI) -> httpx.Response:
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(
+        transport=transport,
+        base_url="http://testserver",
+    ) as client:
+        return await client.get("/health")
 
 
 def test_create_app_uses_injected_settings_and_configures_logging(
@@ -56,6 +67,22 @@ def test_create_app_loads_settings_when_they_are_not_injected(monkeypatch) -> No
     app = create_app()
 
     assert app.state.settings is settings
+
+
+def test_health_returns_typed_liveness_response(monkeypatch) -> None:
+    monkeypatch.setattr(forge.api, "configure_logging", lambda **_: None)
+    app = create_app(settings=Settings(_env_file=None))
+
+    response = asyncio.run(request_health(app))
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/json"
+    assert response.json() == {"status": "ok"}
+
+    response_schema = app.openapi()["paths"]["/health"]["get"]["responses"]["200"]
+    assert response_schema["content"]["application/json"]["schema"] == {
+        "$ref": "#/components/schemas/HealthResponse"
+    }
 
 
 def test_runtime_module_exposes_factory_created_asgi_app(monkeypatch) -> None:

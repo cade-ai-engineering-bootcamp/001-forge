@@ -618,3 +618,41 @@ tools a stable import path.
 - Use application state only for application-lifetime resources.
 - Keep debug behavior secure by default.
 - Test both injected and default construction paths.
+
+## Typed Liveness Endpoints
+
+### Simple Explanation
+
+A liveness endpoint is a small HTTP route that confirms a service process is
+running and able to answer requests. A typed response model fixes the shape and
+allowed values of that answer.
+
+### Why It Exists
+
+Operators and automated systems need a cheap way to distinguish a responsive
+service from a stopped or stuck process. A stable schema also makes the health
+contract visible in generated API documentation.
+
+### Professional Use
+
+Load balancers, container runtimes, deployment systems, and monitoring tools
+call health endpoints to observe service state. Liveness is normally kept
+simple so it does not fail merely because an optional downstream service is
+temporarily unavailable.
+
+### Common Mistakes
+
+- Mixing liveness with expensive dependency checks
+- Returning an untyped, changing payload
+- Including secrets or internal diagnostics in health data
+- Adding business behavior to an operational endpoint
+- Treating HTTP 200 alone as proof that every dependency is ready
+- Forgetting to verify the documented response schema
+
+### Best Practices
+
+- Keep liveness checks fast and deterministic.
+- Return a small, stable, typed response.
+- Use readiness checks separately when real dependencies exist.
+- Avoid exposing configuration or environment details.
+- Test the status code, media type, body, and API schema.
