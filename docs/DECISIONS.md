@@ -358,3 +358,39 @@ causes. Leave HTTP translation to the API boundary.
   of credentials.
 - Framework adapters must explicitly map error types to their own transport
   semantics.
+
+## Decision 012 — Separate Application Construction from the Runtime Module
+
+- **Status:** Accepted
+- **Date:** 2026-08-18
+
+### Context
+
+Forge needs one conventional ASGI object for Uvicorn while keeping application
+construction testable. Loading settings and building the application only in a
+module-level block would make alternate runtime contexts depend on hidden
+process state.
+
+### Decision
+
+Create the FastAPI application in an injectable `create_app()` factory. Let the
+factory accept an existing `Settings` instance or load a fresh one, configure
+Forge logging, attach the resolved settings to application state, and create
+the application with package-derived metadata and debug mode disabled. Keep
+`forge.main` as a thin runtime module that exposes `app = create_app()`.
+
+### Alternatives Considered
+
+- Construct the application and load settings entirely at module import.
+- Require Uvicorn's factory mode for every runtime invocation.
+- Store one global settings singleton for both tests and runtime startup.
+- Add routes and exception handlers during initial application construction.
+
+### Consequences
+
+- Uvicorn has one documented `forge.main:app` entry point.
+- Tests and alternate runtimes can inject validated settings explicitly.
+- Normal runtime import intentionally performs startup composition once.
+- Application settings are available to later boundary components through
+  `app.state.settings`.
+- Routes and error translation remain independently reviewable features.

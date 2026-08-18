@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 52% (16 of 31 features complete)
+- **Overall progress:** 55% (17 of 31 features complete)
 - **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions
 - **Current step:** Step 5 — FastAPI-Ready Application Boundary
-- **Current feature:** Feature 5.1 — Implement the FastAPI application factory and runtime entry point
-- **Estimated remaining focused time:** Approximately 5 hours 15 minutes
+- **Current feature:** Feature 5.2 — Add a typed `GET /health` endpoint
+- **Estimated remaining focused time:** Approximately 4 hours 50 minutes
 
 ## Completed Work
 
@@ -42,6 +42,8 @@ specific AI or business logic.
 - [x] Configured and tested idempotent human-readable and JSON logging.
 - [x] Added contextual fields and explicit sensitive-data redaction rules.
 - [x] Defined and tested framework-independent application errors.
+- [x] Implemented and tested the FastAPI application factory and runtime entry
+  point.
 
 ## Remaining Work
 
@@ -492,7 +494,7 @@ application factory keeps startup behavior testable and reusable.
 
 ### Features
 
-- [ ] **5.1** Implement the FastAPI application factory and runtime entry point.
+- [x] **5.1** Implement the FastAPI application factory and runtime entry point.
 - [ ] **5.2** Add a typed `GET /health` endpoint.
 - [ ] **5.3** Translate application errors at the API boundary and add integration tests.
 

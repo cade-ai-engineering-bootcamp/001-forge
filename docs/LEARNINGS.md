@@ -578,3 +578,43 @@ exception chaining for diagnosis.
 - Preserve root causes with `raise ... from error`.
 - Translate errors only at the relevant system boundary.
 - Test strings, representations, serialization, logging, and chaining.
+
+## ASGI Application Factories and Runtime Entry Points
+
+### Simple Explanation
+
+An application factory is a function that builds and returns a new web
+application. A runtime entry point is the importable application object an ASGI
+server uses to start serving requests.
+
+### Why It Exists
+
+Separating construction from runtime exposure makes startup dependencies
+visible and replaceable. Tests can build an application with controlled
+settings, while Uvicorn still receives the simple module-level object it
+expects.
+
+### Professional Use
+
+Services commonly perform composition in a factory: load validated settings,
+configure infrastructure, create the framework application, and attach shared
+resources. A small runtime module calls that factory once and gives deployment
+tools a stable import path.
+
+### Common Mistakes
+
+- Loading configuration in every module that needs it
+- Hiding one cached settings singleton behind imports
+- Putting routes, business logic, and server launch code in one file
+- Enabling framework debug output in a production-capable foundation
+- Hardcoding package metadata in multiple places
+- Testing only the module-level application and not the factory branches
+
+### Best Practices
+
+- Accept validated dependencies explicitly when practical.
+- Keep the runtime module thin and predictable.
+- Derive application metadata from package metadata.
+- Use application state only for application-lifetime resources.
+- Keep debug behavior secure by default.
+- Test both injected and default construction paths.

@@ -7,9 +7,9 @@ business logic.
 
 > [!NOTE]
 > Forge is under active development. The reproducible environment and project
-> governance are available now, along with the minimal installable `forge`
-> package. Quality gates, the API, container support, and continuous
-> integration are planned work.
+> governance, quality gates, and FastAPI application factory are available now.
+> The health endpoint, container support, and continuous integration are
+> planned work.
 
 ## Project Goals
 
@@ -184,6 +184,31 @@ Internal details must never contain credentials. Preserve a low-level failure
 with Python exception chaining (`raise ... from error`) instead of exposing it
 in a public message. Error classes intentionally contain no HTTP status codes;
 the future API adapter owns that translation.
+
+## Running the Application
+
+Forge constructs its FastAPI application through an injectable factory. The
+runtime module exposes that configured application through one ASGI entry
+point:
+
+```bash
+uv run uvicorn forge.main:app --reload
+```
+
+Uvicorn imports `forge.main:app`, which loads validated settings, configures
+Forge logging, and creates the FastAPI application. The factory also accepts a
+`Settings` instance directly so tests and alternate runtimes can control
+configuration without changing process environment state:
+
+```python
+from forge.api import create_app
+from forge.config import Settings
+
+app = create_app(settings=Settings())
+```
+
+The application intentionally has no business routes yet. The typed health
+endpoint is introduced separately in Feature 5.2.
 
 ## Local Quality Checks
 

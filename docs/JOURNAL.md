@@ -592,3 +592,44 @@ coupling their safe public contract to HTTP or another framework.
 Review Step 5 and Feature 5.1 — Implement the FastAPI application factory and
 runtime entry point. Create the Step 5 branch only after Step 4 is reviewed and
 merged. Do not begin Feature 5.1 without separate approval.
+
+## 2026-08-18 — Feature 5.1: FastAPI Application Factory
+
+### Session Goal
+
+Create a testable FastAPI composition boundary and one conventional runtime
+entry point without adding HTTP behavior scheduled for later features.
+
+### Work Completed
+
+- Added an injectable application factory that accepts validated settings or
+  loads a fresh settings instance.
+- Configured Forge logging from the resolved settings during construction.
+- Added package-derived API metadata and kept debug mode disabled.
+- Stored the resolved settings on application state for later API components.
+- Added a thin ASGI runtime module compatible with Uvicorn.
+- Added unit tests for injected and loaded settings, logging configuration,
+  application metadata, and runtime exposure.
+- Documented local server startup and the application-construction boundary.
+
+### Validation Performed
+
+- Confirmed explicit settings bypass external configuration loading.
+- Confirmed omitted settings use the controlled settings loader.
+- Confirmed logging receives the resolved level and renderer selection.
+- Confirmed the application exposes the expected title, package version,
+  secure debug default, and settings instance.
+- Confirmed `forge.main` exposes the application created by the factory.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+
+### Scope Notes
+
+- No health or business endpoint was added.
+- No HTTP error adapter or integration test was added.
+- No dependency, lockfile, settings, logging, or error changes were added.
+
+### Next Starting Point
+
+Review Feature 5.2 — Add a typed `GET /health` endpoint. Do not begin Feature
+5.2 without separate approval.
