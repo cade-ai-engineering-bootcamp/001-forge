@@ -34,5 +34,7 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
   ASGI runtime entry point.
 - Typed `GET /health` liveness endpoint with a stable `200 OK` response
   contract.
+- Safe API-boundary translation for known application errors and unexpected
+  exceptions, backed by HTTP integration tests.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

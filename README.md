@@ -183,7 +183,20 @@ stable `code` and public `message` intended for a system boundary.
 Internal details must never contain credentials. Preserve a low-level failure
 with Python exception chaining (`raise ... from error`) instead of exposing it
 in a public message. Error classes intentionally contain no HTTP status codes;
-the future API adapter owns that translation.
+the API adapter owns this transport-specific translation:
+
+| Application error | HTTP status |
+| --- | ---: |
+| `InvalidInputError` | `400 Bad Request` |
+| `ResourceNotFoundError` | `404 Not Found` |
+| `ConflictError` | `409 Conflict` |
+| `DependencyUnavailableError` | `503 Service Unavailable` |
+| Base or unmapped `ApplicationError` | `500 Internal Server Error` |
+
+Known application errors return only their stable public code and message.
+Unexpected exceptions return a generic `internal_server_error` response with
+HTTP 500; their exception text and stack traces never enter the HTTP body.
+FastAPI's own request-validation and HTTP exception behavior remains intact.
 
 ## Running the Application
 

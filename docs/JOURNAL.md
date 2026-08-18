@@ -668,3 +668,50 @@ dependency checks, or error translation.
 
 Review Feature 5.3 — Translate application errors at the API boundary and add
 integration tests. Do not begin Feature 5.3 without separate approval.
+
+## 2026-08-18 — Feature 5.3: API Error Translation
+
+### Session Goal
+
+Complete the FastAPI boundary by translating application failures into safe
+HTTP contracts and proving response behavior through ASGI integration tests.
+
+### Work Completed
+
+- Added a typed public error-response model.
+- Mapped invalid input, missing resources, conflicts, unavailable dependencies,
+  and base application failures to explicit HTTP status codes.
+- Added a catch-all response for unexpected exceptions with a fixed generic
+  code and message.
+- Registered both handlers on every factory-created application.
+- Added integration tests that raise errors from test-only routes and exercise
+  them through HTTPX's ASGI transport.
+- Configured Pytest's importlib mode so unit and integration directories can
+  use the same descriptive test-module name without an import collision.
+- Documented the mapping, safety boundary, and adapter architecture.
+
+### Validation Performed
+
+- Confirmed every application error returns its safe public dictionary and the
+  expected HTTP status.
+- Confirmed internal diagnostics never appear in response bodies.
+- Confirmed unexpected exception messages, types, and tracebacks remain absent
+  from the generic HTTP 500 response.
+- Confirmed the handlers return JSON and production exposes no test routes.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+
+### Scope Notes
+
+- No HTTP concerns were added to the application error hierarchy.
+- No custom request-validation behavior, middleware, logging, or routes beyond
+  `/health` were added to production.
+- No dependency, lockfile, settings, or runtime-entry-point changes were added.
+- The only test-harness change selects Pytest's importlib collection mode for
+  the approved unit and integration directory layout.
+
+### Next Starting Point
+
+Review Step 6 and Feature 6.1 — Define a secure, cache-efficient Docker build
+context and image. Create the Step 6 branch only after Step 5 is reviewed and
+merged. Do not begin Feature 6.1 without separate approval.

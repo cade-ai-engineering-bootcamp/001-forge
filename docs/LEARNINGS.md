@@ -656,3 +656,42 @@ temporarily unavailable.
 - Use readiness checks separately when real dependencies exist.
 - Avoid exposing configuration or environment details.
 - Test the status code, media type, body, and API schema.
+
+## Error Translation at System Boundaries
+
+### Simple Explanation
+
+An error adapter converts an application failure into the language of the
+system exposing it. For an HTTP API, that language consists of a status code
+and a response body.
+
+### Why It Exists
+
+Application code should not depend on one delivery mechanism, while clients
+still need predictable transport behavior. The adapter provides that mapping
+without making reusable errors aware of FastAPI or HTTP.
+
+### Professional Use
+
+Services map domain or application failures at their outer boundary. Expected
+failures receive deliberate client-visible contracts, while unexpected
+failures receive a generic response and remain available only through trusted
+diagnostic channels.
+
+### Common Mistakes
+
+- Putting HTTP status codes on framework-independent errors
+- Returning `str(exception)` to an external caller
+- Treating every application failure as the same client error
+- Exposing stack traces when framework debug mode is enabled
+- Replacing useful framework validation behavior without a requirement
+- Adding failure-simulation routes to the production application
+
+### Best Practices
+
+- Map each expected error category explicitly.
+- Reuse stable, reviewed public error data.
+- Return one fixed response for unexpected failures.
+- Keep internal details and tracebacks outside response bodies.
+- Test through the real framework boundary with exception propagation disabled.
+- Build failure routes only on isolated test applications.

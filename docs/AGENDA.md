@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 58% (18 of 31 features complete)
-- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions
-- **Current step:** Step 5 — FastAPI-Ready Application Boundary
-- **Current feature:** Feature 5.3 — Translate application errors at the API boundary and add integration tests
-- **Estimated remaining focused time:** Approximately 4 hours 25 minutes
+- **Overall progress:** 61% (19 of 31 features complete)
+- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions; Step 5 — FastAPI-Ready Application Boundary
+- **Current step:** Step 6 — Containerization
+- **Current feature:** Feature 6.1 — Define a secure, cache-efficient Docker build context and image
+- **Estimated remaining focused time:** Approximately 4 hours
 
 ## Completed Work
 
@@ -45,10 +45,11 @@ specific AI or business logic.
 - [x] Implemented and tested the FastAPI application factory and runtime entry
   point.
 - [x] Added and tested the typed `GET /health` liveness endpoint.
+- [x] Added safe API error translation and HTTP integration tests.
 
 ## Remaining Work
 
-- [ ] Complete Steps 5–9 and the graduation review.
+- [ ] Complete Steps 6–9 and the graduation review.
 - [ ] Verify all local, container, and CI quality gates.
 - [ ] Demonstrate that a new project can start from Forge in under 10 minutes.
 
@@ -497,7 +498,7 @@ application factory keeps startup behavior testable and reusable.
 
 - [x] **5.1** Implement the FastAPI application factory and runtime entry point.
 - [x] **5.2** Add a typed `GET /health` endpoint.
-- [ ] **5.3** Translate application errors at the API boundary and add integration tests.
+- [x] **5.3** Translate application errors at the API boundary and add integration tests.
 
 ### Learning Objectives
 
