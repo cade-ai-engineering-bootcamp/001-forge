@@ -578,3 +578,120 @@ exception chaining for diagnosis.
 - Preserve root causes with `raise ... from error`.
 - Translate errors only at the relevant system boundary.
 - Test strings, representations, serialization, logging, and chaining.
+
+## ASGI Application Factories and Runtime Entry Points
+
+### Simple Explanation
+
+An application factory is a function that builds and returns a new web
+application. A runtime entry point is the importable application object an ASGI
+server uses to start serving requests.
+
+### Why It Exists
+
+Separating construction from runtime exposure makes startup dependencies
+visible and replaceable. Tests can build an application with controlled
+settings, while Uvicorn still receives the simple module-level object it
+expects.
+
+### Professional Use
+
+Services commonly perform composition in a factory: load validated settings,
+configure infrastructure, create the framework application, and attach shared
+resources. A small runtime module calls that factory once and gives deployment
+tools a stable import path.
+
+### Common Mistakes
+
+- Loading configuration in every module that needs it
+- Hiding one cached settings singleton behind imports
+- Putting routes, business logic, and server launch code in one file
+- Enabling framework debug output in a production-capable foundation
+- Hardcoding package metadata in multiple places
+- Testing only the module-level application and not the factory branches
+
+### Best Practices
+
+- Accept validated dependencies explicitly when practical.
+- Keep the runtime module thin and predictable.
+- Derive application metadata from package metadata.
+- Use application state only for application-lifetime resources.
+- Keep debug behavior secure by default.
+- Test both injected and default construction paths.
+
+## Typed Liveness Endpoints
+
+### Simple Explanation
+
+A liveness endpoint is a small HTTP route that confirms a service process is
+running and able to answer requests. A typed response model fixes the shape and
+allowed values of that answer.
+
+### Why It Exists
+
+Operators and automated systems need a cheap way to distinguish a responsive
+service from a stopped or stuck process. A stable schema also makes the health
+contract visible in generated API documentation.
+
+### Professional Use
+
+Load balancers, container runtimes, deployment systems, and monitoring tools
+call health endpoints to observe service state. Liveness is normally kept
+simple so it does not fail merely because an optional downstream service is
+temporarily unavailable.
+
+### Common Mistakes
+
+- Mixing liveness with expensive dependency checks
+- Returning an untyped, changing payload
+- Including secrets or internal diagnostics in health data
+- Adding business behavior to an operational endpoint
+- Treating HTTP 200 alone as proof that every dependency is ready
+- Forgetting to verify the documented response schema
+
+### Best Practices
+
+- Keep liveness checks fast and deterministic.
+- Return a small, stable, typed response.
+- Use readiness checks separately when real dependencies exist.
+- Avoid exposing configuration or environment details.
+- Test the status code, media type, body, and API schema.
+
+## Error Translation at System Boundaries
+
+### Simple Explanation
+
+An error adapter converts an application failure into the language of the
+system exposing it. For an HTTP API, that language consists of a status code
+and a response body.
+
+### Why It Exists
+
+Application code should not depend on one delivery mechanism, while clients
+still need predictable transport behavior. The adapter provides that mapping
+without making reusable errors aware of FastAPI or HTTP.
+
+### Professional Use
+
+Services map domain or application failures at their outer boundary. Expected
+failures receive deliberate client-visible contracts, while unexpected
+failures receive a generic response and remain available only through trusted
+diagnostic channels.
+
+### Common Mistakes
+
+- Putting HTTP status codes on framework-independent errors
+- Returning `str(exception)` to an external caller
+- Treating every application failure as the same client error
+- Exposing stack traces when framework debug mode is enabled
+- Replacing useful framework validation behavior without a requirement
+- Adding failure-simulation routes to the production application
+
+### Best Practices
+
+- Map each expected error category explicitly.
+- Reuse stable, reviewed public error data.
+- Return one fixed response for unexpected failures.
+- Keep internal details and tracebacks outside response bodies.
+- Test through the real framework boundary with exception propagation disabled.
+- Build failure routes only on isolated test applications.

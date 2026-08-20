@@ -592,3 +592,126 @@ coupling their safe public contract to HTTP or another framework.
 Review Step 5 and Feature 5.1 — Implement the FastAPI application factory and
 runtime entry point. Create the Step 5 branch only after Step 4 is reviewed and
 merged. Do not begin Feature 5.1 without separate approval.
+
+## 2026-08-18 — Feature 5.1: FastAPI Application Factory
+
+### Session Goal
+
+Create a testable FastAPI composition boundary and one conventional runtime
+entry point without adding HTTP behavior scheduled for later features.
+
+### Work Completed
+
+- Added an injectable application factory that accepts validated settings or
+  loads a fresh settings instance.
+- Configured Forge logging from the resolved settings during construction.
+- Added package-derived API metadata and kept debug mode disabled.
+- Stored the resolved settings on application state for later API components.
+- Added a thin ASGI runtime module compatible with Uvicorn.
+- Added unit tests for injected and loaded settings, logging configuration,
+  application metadata, and runtime exposure.
+- Documented local server startup and the application-construction boundary.
+
+### Validation Performed
+
+- Confirmed explicit settings bypass external configuration loading.
+- Confirmed omitted settings use the controlled settings loader.
+- Confirmed logging receives the resolved level and renderer selection.
+- Confirmed the application exposes the expected title, package version,
+  secure debug default, and settings instance.
+- Confirmed `forge.main` exposes the application created by the factory.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+
+### Scope Notes
+
+- No health or business endpoint was added.
+- No HTTP error adapter or integration test was added.
+- No dependency, lockfile, settings, logging, or error changes were added.
+
+### Next Starting Point
+
+Review Feature 5.2 — Add a typed `GET /health` endpoint. Do not begin Feature
+5.2 without separate approval.
+
+## 2026-08-18 — Feature 5.2: Typed Health Endpoint
+
+### Session Goal
+
+Add one stable HTTP liveness contract without introducing business behavior,
+dependency checks, or error translation.
+
+### Work Completed
+
+- Added a Pydantic response model whose status is constrained to `"ok"`.
+- Registered an asynchronous `GET /health` route on each factory-created app.
+- Returned the typed response with an explicit `200 OK` contract.
+- Added a focused HTTPX ASGI test for routing, status, content type, response
+  data, and the OpenAPI response-model reference.
+- Documented server health-check usage and liveness semantics.
+
+### Validation Performed
+
+- Confirmed `GET /health` returns HTTP 200 and exactly `{"status": "ok"}`.
+- Confirmed the response uses the JSON media type.
+- Confirmed OpenAPI describes the route through `HealthResponse`.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+
+### Scope Notes
+
+- The endpoint reports process liveness, not external dependency readiness.
+- No application-error translation or unexpected-error handling was added.
+- No additional routes, dependencies, settings, or middleware were added.
+
+### Next Starting Point
+
+Review Feature 5.3 — Translate application errors at the API boundary and add
+integration tests. Do not begin Feature 5.3 without separate approval.
+
+## 2026-08-18 — Feature 5.3: API Error Translation
+
+### Session Goal
+
+Complete the FastAPI boundary by translating application failures into safe
+HTTP contracts and proving response behavior through ASGI integration tests.
+
+### Work Completed
+
+- Added a typed public error-response model.
+- Mapped invalid input, missing resources, conflicts, unavailable dependencies,
+  and base application failures to explicit HTTP status codes.
+- Added a catch-all response for unexpected exceptions with a fixed generic
+  code and message.
+- Registered both handlers on every factory-created application.
+- Added integration tests that raise errors from test-only routes and exercise
+  them through HTTPX's ASGI transport.
+- Configured Pytest's importlib mode so unit and integration directories can
+  use the same descriptive test-module name without an import collision.
+- Documented the mapping, safety boundary, and adapter architecture.
+
+### Validation Performed
+
+- Confirmed every application error returns its safe public dictionary and the
+  expected HTTP status.
+- Confirmed internal diagnostics never appear in response bodies.
+- Confirmed unexpected exception messages, types, and tracebacks remain absent
+  from the generic HTTP 500 response.
+- Confirmed the handlers return JSON and production exposes no test routes.
+- Confirmed frozen synchronization, Black, Ruff, strict MyPy, Pytest, coverage,
+  and the whitespace check pass.
+
+### Scope Notes
+
+- No HTTP concerns were added to the application error hierarchy.
+- No custom request-validation behavior, middleware, logging, or routes beyond
+  `/health` were added to production.
+- No dependency, lockfile, settings, or runtime-entry-point changes were added.
+- The only test-harness change selects Pytest's importlib collection mode for
+  the approved unit and integration directory layout.
+
+### Next Starting Point
+
+Review Step 6 and Feature 6.1 — Define a secure, cache-efficient Docker build
+context and image. Create the Step 6 branch only after Step 5 is reviewed and
+merged. Do not begin Feature 6.1 without separate approval.

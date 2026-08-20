@@ -358,3 +358,77 @@ causes. Leave HTTP translation to the API boundary.
   of credentials.
 - Framework adapters must explicitly map error types to their own transport
   semantics.
+
+## Decision 012 — Separate Application Construction from the Runtime Module
+
+- **Status:** Accepted
+- **Date:** 2026-08-18
+
+### Context
+
+Forge needs one conventional ASGI object for Uvicorn while keeping application
+construction testable. Loading settings and building the application only in a
+module-level block would make alternate runtime contexts depend on hidden
+process state.
+
+### Decision
+
+Create the FastAPI application in an injectable `create_app()` factory. Let the
+factory accept an existing `Settings` instance or load a fresh one, configure
+Forge logging, attach the resolved settings to application state, and create
+the application with package-derived metadata and debug mode disabled. Keep
+`forge.main` as a thin runtime module that exposes `app = create_app()`.
+
+### Alternatives Considered
+
+- Construct the application and load settings entirely at module import.
+- Require Uvicorn's factory mode for every runtime invocation.
+- Store one global settings singleton for both tests and runtime startup.
+- Add routes and exception handlers during initial application construction.
+
+### Consequences
+
+- Uvicorn has one documented `forge.main:app` entry point.
+- Tests and alternate runtimes can inject validated settings explicitly.
+- Normal runtime import intentionally performs startup composition once.
+- Application settings are available to later boundary components through
+  `app.state.settings`.
+- Routes and error translation remain independently reviewable features.
+
+## Decision 013 — Translate Errors Only at the HTTP Boundary
+
+- **Status:** Accepted
+- **Date:** 2026-08-18
+
+### Context
+
+Forge's application errors deliberately contain no HTTP metadata, but API
+clients still need meaningful status codes and safe response bodies. Framework
+defaults for unexpected exceptions also do not provide Forge's stable JSON
+error shape.
+
+### Decision
+
+Register exception handlers on each factory-created FastAPI application. Map
+known application error categories to explicit HTTP status codes while using
+their existing public dictionaries as response content. Map a base or unmapped
+`ApplicationError` to HTTP 500. Return a fixed `internal_server_error` payload
+for every unexpected exception without including exception text or traceback
+data. Leave FastAPI's built-in validation and HTTP exception handling intact.
+
+### Alternatives Considered
+
+- Add HTTP status codes directly to application exceptions.
+- Return raw exception strings from a catch-all handler.
+- Depend entirely on FastAPI's default plain-text 500 response.
+- Customize every framework validation and HTTP exception response.
+- Add test-only production routes for triggering error behavior.
+
+### Consequences
+
+- Application errors remain reusable by non-HTTP runtimes.
+- API clients receive stable JSON codes, messages, and status semantics.
+- Internal diagnostics and unexpected exception details stay out of responses.
+- New application error categories require an explicit adapter mapping.
+- Integration tests create failing routes only on their local application
+  instances; the production application still exposes only `/health`.

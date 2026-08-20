@@ -30,5 +30,11 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
   redaction across structured and standard-library records.
 - Framework-independent application errors with stable codes, safe public
   messages, internal diagnostics, and explicit public serialization.
+- Injectable FastAPI application factory and a conventional Uvicorn-compatible
+  ASGI runtime entry point.
+- Typed `GET /health` liveness endpoint with a stable `200 OK` response
+  contract.
+- Safe API-boundary translation for known application errors and unexpected
+  exceptions, backed by HTTP integration tests.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

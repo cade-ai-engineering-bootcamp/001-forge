@@ -7,9 +7,9 @@ business logic.
 
 > [!NOTE]
 > Forge is under active development. The reproducible environment and project
-> governance are available now, along with the minimal installable `forge`
-> package. Quality gates, the API, container support, and continuous
-> integration are planned work.
+> governance, quality gates, and FastAPI application factory are available now.
+> The health endpoint, container support, and continuous integration are
+> planned work.
 
 ## Project Goals
 
@@ -183,7 +183,58 @@ stable `code` and public `message` intended for a system boundary.
 Internal details must never contain credentials. Preserve a low-level failure
 with Python exception chaining (`raise ... from error`) instead of exposing it
 in a public message. Error classes intentionally contain no HTTP status codes;
-the future API adapter owns that translation.
+the API adapter owns this transport-specific translation:
+
+| Application error | HTTP status |
+| --- | ---: |
+| `InvalidInputError` | `400 Bad Request` |
+| `ResourceNotFoundError` | `404 Not Found` |
+| `ConflictError` | `409 Conflict` |
+| `DependencyUnavailableError` | `503 Service Unavailable` |
+| Base or unmapped `ApplicationError` | `500 Internal Server Error` |
+
+Known application errors return only their stable public code and message.
+Unexpected exceptions return a generic `internal_server_error` response with
+HTTP 500; their exception text and stack traces never enter the HTTP body.
+FastAPI's own request-validation and HTTP exception behavior remains intact.
+
+## Running the Application
+
+Forge constructs its FastAPI application through an injectable factory. The
+runtime module exposes that configured application through one ASGI entry
+point:
+
+```bash
+uv run uvicorn forge.main:app --reload
+```
+
+Uvicorn imports `forge.main:app`, which loads validated settings, configures
+Forge logging, and creates the FastAPI application. The factory also accepts a
+`Settings` instance directly so tests and alternate runtimes can control
+configuration without changing process environment state:
+
+```python
+from forge.api import create_app
+from forge.config import Settings
+
+app = create_app(settings=Settings())
+```
+
+Check that the running HTTP process can respond:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Forge returns a typed liveness response with HTTP status `200 OK`:
+
+```json
+{"status":"ok"}
+```
+
+This endpoint confirms only that the Forge process is running and responsive.
+It does not report dependency readiness, and Forge intentionally has no
+business routes.
 
 ## Local Quality Checks
 
