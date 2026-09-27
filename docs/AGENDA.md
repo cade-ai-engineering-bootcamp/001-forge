@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 68% (21 of 31 features complete)
-- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions; Step 5 — FastAPI-Ready Application Boundary
-- **Current step:** Step 6 — Containerization
-- **Current feature:** Feature 6.3 — Add and execute a container smoke test
-- **Estimated remaining focused time:** Approximately 3 hours 10 minutes
+- **Overall progress:** 71% (22 of 31 features complete)
+- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions; Step 5 — FastAPI-Ready Application Boundary; Step 6 — Containerization
+- **Current step:** Step 7 — Continuous Integration
+- **Current feature:** Feature 7.1 — Create a least-privilege CI workflow with immutable action pins
+- **Estimated remaining focused time:** Approximately 2 hours 45 minutes
 
 ## Completed Work
 
@@ -48,10 +48,11 @@ specific AI or business logic.
 - [x] Added safe API error translation and HTTP integration tests.
 - [x] Built and validated the secure, cache-efficient Forge container image.
 - [x] Added and validated secure local service execution through Compose.
+- [x] Added and passed the end-to-end container smoke test.
 
 ## Remaining Work
 
-- [ ] Complete Steps 6–9 and the graduation review.
+- [ ] Complete Steps 7–9 and the graduation review.
 - [ ] Verify all local, container, and CI quality gates.
 - [ ] Demonstrate that a new project can start from Forge in under 10 minutes.
 
@@ -558,7 +559,7 @@ artifact.
 
 - [x] **6.1** Define a secure, cache-efficient Docker build context and image.
 - [x] **6.2** Add Compose configuration for local service execution.
-- [ ] **6.3** Add and execute a container smoke test.
+- [x] **6.3** Add and execute a container smoke test.
 
 ### Learning Objectives
 

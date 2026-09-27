@@ -776,3 +776,44 @@ remain externally configurable.
 - Reinforce user, filesystem, capability, and privilege boundaries.
 - Use temporary filesystems only for paths that genuinely need writes.
 - Tear down containers and networks after local work.
+
+## Container Smoke Tests and Cleanup
+
+### Simple Explanation
+
+A smoke test performs a short trip through the most important parts of a
+running system. For Forge, it proves that the image can build, start securely,
+answer a request, receive settings, and shut down cleanly.
+
+### Why It Exists
+
+Unit tests cannot prove that a container definition, runtime user, port,
+health check, and orchestration file work together. A repeatable smoke test
+finds packaging and operational mistakes before deployment.
+
+### Professional Use
+
+Teams run smoke tests locally and in delivery pipelines after producing a
+deployable artifact. Tests use isolated resource names, emit useful diagnostics
+on failure, and clean up whether they pass, fail, or are interrupted.
+
+### Common Mistakes
+
+- Checking only that a container process started
+- Trusting a health status without calling the public endpoint
+- Leaving failed containers and networks behind
+- Hiding service logs when an assertion fails
+- Depending on a developer's uncontrolled environment values
+- Reusing resource names that interfere with normal local services
+- Deleting the built image needed for later inspection
+
+### Best Practices
+
+- Use strict shell error handling and explicit assertions.
+- Validate prerequisites before creating resources.
+- Give test resources an isolated project name.
+- Supply deterministic, non-secret settings.
+- Test behavior and security properties through the running container.
+- Print logs only when they aid diagnosis.
+- Register cleanup before starting resources.
+- Preserve the test's original exit code during cleanup.

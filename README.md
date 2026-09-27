@@ -308,6 +308,20 @@ local host, runs as `10001:10001`, drops all Linux capabilities, prevents
 privilege escalation, and uses a read-only root filesystem with an ephemeral
 `/tmp` scratch area. It does not mount the source tree or pass an API key.
 
+### Container Smoke Test
+
+Run the complete container acceptance check from the repository root:
+
+```bash
+./scripts/container_smoke_test.sh
+```
+
+The script requires Docker with Compose and `curl`. It builds and starts Forge
+under the isolated `forge-smoke` project, waits for health, verifies the API,
+runtime settings, non-root identity, filesystem restrictions, image contents,
+and Linux security controls, then removes its temporary container and network.
+If a check fails, it prints the service logs before cleanup and exits nonzero.
+
 ## Local Quality Checks
 
 Verify that Python files match Black's formatting rules:
@@ -345,6 +359,7 @@ package without adding `src` directly to Python's import path.
 ```text
 .
 ├── docs/               # Agenda, journal, decisions, and learning records
+├── scripts/            # Repeatable operational checks
 ├── src/
 │   └── forge/           # Installable Python import package
 ├── tests/

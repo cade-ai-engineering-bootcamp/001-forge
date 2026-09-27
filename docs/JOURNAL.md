@@ -804,3 +804,46 @@ its immutable and least-privilege runtime model.
 
 Review Feature 6.3 — Add and execute a container smoke test. Do not begin
 Feature 6.3 without separate approval.
+
+## 2026-09-27 — Feature 6.3: Container Smoke Test
+
+### Session Goal
+
+Turn the Step 6 container requirements into one repeatable acceptance command
+that fails clearly and always cleans up its temporary resources.
+
+### Work Completed
+
+- Added an executable Bash smoke test with strict error handling.
+- Isolated test resources under the `forge-smoke` Compose project.
+- Added prerequisite, Compose configuration, build, startup, and health checks.
+- Added assertions for the exact API response, effective identity, injected
+  settings, runtime contents, writable paths, and container security controls.
+- Added failure-only service logs and exit-safe Compose cleanup.
+- Documented the smoke-test command, behavior, requirements, and failure mode.
+
+### Validation Performed
+
+- Confirmed the script passes Bash syntax validation.
+- Executed the script successfully against Docker Compose 5.3.1.
+- Confirmed the image builds and the service reaches healthy state.
+- Confirmed `/health` returns exactly `{"status":"ok"}`.
+- Confirmed the service runs as `10001:10001` with the controlled test settings.
+- Confirmed application files are read-only while `/tmp` remains writable.
+- Confirmed secrets, repository files, source, tests, metadata, and uv remain
+  absent from the runtime image.
+- Confirmed all capabilities are dropped and privilege escalation is disabled.
+- Confirmed the temporary container and network are removed after success.
+- Confirmed local quality gates and the whitespace check pass.
+
+### Scope Notes
+
+- No Python, Dockerfile, Compose, dependency, lockfile, or CI changes were made.
+- The test uses existing Docker, Compose, Bash, and curl tooling.
+- The built `forge:local` image remains available for inspection.
+
+### Next Starting Point
+
+Review Step 7 and Feature 7.1 — Create a least-privilege CI workflow with
+immutable action pins. Create the Step 7 branch only after Step 6 is reviewed
+and merged. Do not begin Feature 7.1 without separate approval.
