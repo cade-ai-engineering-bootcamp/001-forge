@@ -275,8 +275,38 @@ The image installs only locked runtime dependencies and runs as the fixed
 unprivileged user `10001:10001`. The allowlisted build context excludes local
 environments, credentials, Git history, tests, caches, and development records.
 Runtime configuration is supplied through environment variables rather than
-baked into image layers. Compose-based execution is introduced separately in
-Feature 6.2.
+baked into image layers.
+
+### Docker Compose
+
+Validate the Compose configuration, then build and start Forge in the
+background while waiting for its health check:
+
+```bash
+docker compose config --quiet
+docker compose up --build --detach --wait
+```
+
+Inspect the service, call the API, and follow its logs:
+
+```bash
+docker compose ps
+curl http://127.0.0.1:8000/health
+docker compose logs --follow api
+```
+
+Stop the service and remove its container and network:
+
+```bash
+docker compose down
+```
+
+Compose uses development-safe settings by default. Set
+`FORGE_ENVIRONMENT`, `FORGE_LOG_LEVEL`, or `FORGE_LOG_JSON` in the shell or an
+ignored local `.env` file to override them. The service remains bound to the
+local host, runs as `10001:10001`, drops all Linux capabilities, prevents
+privilege escalation, and uses a read-only root filesystem with an ephemeral
+`/tmp` scratch area. It does not mount the source tree or pass an API key.
 
 ## Local Quality Checks
 
@@ -323,6 +353,7 @@ package without adding `src` directly to Python's import path.
 ├── .dockerignore       # Allowlisted Docker build context
 ├── .python-version     # Required Python interpreter version
 ├── CHANGELOG.md        # Notable project changes
+├── compose.yaml        # Secure local service orchestration
 ├── Dockerfile          # Multi-stage production container image
 ├── LICENSE             # MIT license
 ├── pyproject.toml      # Project metadata and dependency declarations

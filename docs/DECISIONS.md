@@ -472,3 +472,41 @@ and implement the image health check with Python's standard library.
 - Runtime configuration remains external to the immutable image.
 - The health check adds no operating-system package.
 - Base-image and uv tags must be updated deliberately during maintenance.
+
+## Decision 015 — Keep Local Compose Execution Immutable and Least-Privilege
+
+- **Status:** Accepted
+- **Date:** 2026-09-27
+
+### Context
+
+Local orchestration should make the secure image easy to operate without
+quietly replacing its runtime model with source mounts, root access, or broad
+host exposure. Developers also need predictable defaults and a clean lifecycle.
+
+### Decision
+
+Define one Compose service that builds the Dockerfile's runtime stage, binds
+port 8000 only to the local host, and inherits the image health check. Supply
+development-safe settings with shell and local dotenv overrides for non-secret
+values. Reinforce UID and GID 10001, drop all Linux capabilities, prevent
+privilege escalation, make the root filesystem read-only, and provide only an
+ephemeral `/tmp` filesystem. Do not mount source or pass an API key.
+
+### Alternatives Considered
+
+- Publish the service on every host interface.
+- Bind-mount source and run Uvicorn with reload enabled.
+- Run Compose with the image's root default.
+- Give the container its normal Linux capability set.
+- Make the entire container filesystem writable.
+- Pass every local dotenv value into the container automatically.
+
+### Consequences
+
+- One command builds, starts, and waits for a healthy local service.
+- Local access remains available without exposing the port to the network.
+- Compose cannot modify packaged application files.
+- Non-secret settings can vary without rebuilding the image.
+- Source-editing workflows require a rebuild instead of live reload.
+- Secret delivery remains an explicit future-project responsibility.

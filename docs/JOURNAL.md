@@ -761,3 +761,46 @@ least-privilege image without changing application behavior.
 
 Review Feature 6.2 — Add Compose configuration for local service execution. Do
 not begin Feature 6.2 without separate approval.
+
+## 2026-09-27 — Feature 6.2: Secure Compose Execution
+
+### Session Goal
+
+Provide one predictable local lifecycle for the Forge image while preserving
+its immutable and least-privilege runtime model.
+
+### Work Completed
+
+- Added a single `api` Compose service that builds the Dockerfile runtime stage.
+- Added safe overridable defaults for environment, log level, and log format.
+- Published port 8000 only on the local host.
+- Reinforced non-root execution, removed Linux capabilities, prevented
+  privilege escalation, and made the root filesystem read-only.
+- Added an ephemeral writable `/tmp` area without mounting application source.
+- Documented Compose validation, startup, health, logs, and cleanup commands.
+
+### Validation Performed
+
+- Confirmed `docker compose config --quiet` accepts the configuration.
+- Built `forge:local` and waited for the service to become healthy.
+- Confirmed `/health` returns `{"status":"ok"}` through the published port.
+- Confirmed the service runs as UID and GID `10001:10001` with the expected
+  development settings.
+- Confirmed `/app` is read-only while `/tmp` remains writable.
+- Confirmed all Linux capabilities are dropped and privilege escalation is
+  disabled.
+- Confirmed startup and health requests appear in Compose logs.
+- Confirmed `docker compose down` removes the container and network cleanly.
+- Confirmed local quality gates and the whitespace check pass.
+
+### Scope Notes
+
+- No Dockerfile, Python source, dependency, or lockfile changes were made.
+- No source mounts, live reload, secret forwarding, or extra services were
+  added.
+- No reusable smoke-test script was introduced.
+
+### Next Starting Point
+
+Review Feature 6.3 — Add and execute a container smoke test. Do not begin
+Feature 6.3 without separate approval.

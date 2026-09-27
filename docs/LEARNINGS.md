@@ -736,3 +736,43 @@ unchanged layers to make frequent source-only builds faster.
 - Copy only runtime artifacts into the final stage.
 - Use a fixed unprivileged identity and exec-form startup.
 - Supply configuration at container runtime.
+
+## Secure Local Orchestration with Compose
+
+### Simple Explanation
+
+Compose stores the instructions for building, starting, checking, and stopping
+one or more containers. It replaces a long collection of repeated command-line
+options with one reviewed configuration file.
+
+### Why It Exists
+
+Manual container commands are easy to mistype and may omit a port, setting, or
+security rule. A committed Compose file gives every developer the same local
+runtime behavior.
+
+### Professional Use
+
+Teams use Compose for repeatable local service topologies and lifecycle
+commands. Production-like image behavior can be preserved while local settings
+remain externally configurable.
+
+### Common Mistakes
+
+- Publishing development services on every network interface
+- Running as root even when the image defines a non-root user
+- Mounting source over an immutable production package
+- Giving containers capabilities they do not need
+- Making the full filesystem writable by default
+- Passing an entire dotenv file when only a few settings are required
+- Assuming service startup means the application is healthy
+
+### Best Practices
+
+- Bind local-only services to `127.0.0.1`.
+- Keep one clear service name and lifecycle.
+- Wait for a real health check before treating startup as successful.
+- Make runtime configuration explicit and overridable.
+- Reinforce user, filesystem, capability, and privilege boundaries.
+- Use temporary filesystems only for paths that genuinely need writes.
+- Tear down containers and networks after local work.

@@ -1,0 +1,22 @@
+name: forge
+
+services:
+  api:
+    build:
+      context: .
+      target: runtime
+    image: forge:local
+    environment:
+      FORGE_ENVIRONMENT: ${FORGE_ENVIRONMENT:-development}
+      FORGE_LOG_LEVEL: ${FORGE_LOG_LEVEL:-INFO}
+      FORGE_LOG_JSON: ${FORGE_LOG_JSON:-false}
+    ports:
+      - "127.0.0.1:8000:8000"
+    user: "10001:10001"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true

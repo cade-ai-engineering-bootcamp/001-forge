@@ -38,5 +38,7 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
   exceptions, backed by HTTP integration tests.
 - Secure multi-stage container image with a minimal allowlisted build context,
   frozen runtime dependencies, non-root execution, and an HTTP health check.
+- Local Compose workflow with safe configuration defaults, localhost-only
+  publishing, health-aware startup, and hardened runtime controls.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main
