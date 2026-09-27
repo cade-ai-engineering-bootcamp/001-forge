@@ -695,3 +695,125 @@ diagnostic channels.
 - Keep internal details and tracebacks outside response bodies.
 - Test through the real framework boundary with exception propagation disabled.
 - Build failure routes only on isolated test applications.
+
+## Secure and Cache-Efficient Container Images
+
+### Simple Explanation
+
+A container image packages an application and its runtime files into immutable
+layers. A multi-stage build uses one temporary environment to assemble the
+application and a smaller final environment to run it.
+
+### Why It Exists
+
+Copying an entire development repository into one image can include secrets,
+tools, and files the service never needs. Poorly ordered layers also reinstall
+dependencies whenever application source changes.
+
+### Professional Use
+
+Production services use narrow build contexts, deterministic dependency
+installation, non-root users, and direct process startup. Build systems reuse
+unchanged layers to make frequent source-only builds faster.
+
+### Common Mistakes
+
+- Sending `.env`, `.git`, or local virtual environments to the builder
+- Installing test and formatting tools in the runtime image
+- Copying source before resolving dependencies and defeating the cache
+- Running the service as root
+- Using shell-form commands that interfere with signal delivery
+- Installing an operating-system HTTP client only for health checks
+- Baking environment-specific configuration into image layers
+
+### Best Practices
+
+- Deny the build context by default and allow only required inputs.
+- Separate dependency and application installation layers.
+- Enforce the committed lockfile during image construction.
+- Use build-cache mounts without copying caches into the final image.
+- Install the project non-editably for an immutable runtime layout.
+- Copy only runtime artifacts into the final stage.
+- Use a fixed unprivileged identity and exec-form startup.
+- Supply configuration at container runtime.
+
+## Secure Local Orchestration with Compose
+
+### Simple Explanation
+
+Compose stores the instructions for building, starting, checking, and stopping
+one or more containers. It replaces a long collection of repeated command-line
+options with one reviewed configuration file.
+
+### Why It Exists
+
+Manual container commands are easy to mistype and may omit a port, setting, or
+security rule. A committed Compose file gives every developer the same local
+runtime behavior.
+
+### Professional Use
+
+Teams use Compose for repeatable local service topologies and lifecycle
+commands. Production-like image behavior can be preserved while local settings
+remain externally configurable.
+
+### Common Mistakes
+
+- Publishing development services on every network interface
+- Running as root even when the image defines a non-root user
+- Mounting source over an immutable production package
+- Giving containers capabilities they do not need
+- Making the full filesystem writable by default
+- Passing an entire dotenv file when only a few settings are required
+- Assuming service startup means the application is healthy
+
+### Best Practices
+
+- Bind local-only services to `127.0.0.1`.
+- Keep one clear service name and lifecycle.
+- Wait for a real health check before treating startup as successful.
+- Make runtime configuration explicit and overridable.
+- Reinforce user, filesystem, capability, and privilege boundaries.
+- Use temporary filesystems only for paths that genuinely need writes.
+- Tear down containers and networks after local work.
+
+## Container Smoke Tests and Cleanup
+
+### Simple Explanation
+
+A smoke test performs a short trip through the most important parts of a
+running system. For Forge, it proves that the image can build, start securely,
+answer a request, receive settings, and shut down cleanly.
+
+### Why It Exists
+
+Unit tests cannot prove that a container definition, runtime user, port,
+health check, and orchestration file work together. A repeatable smoke test
+finds packaging and operational mistakes before deployment.
+
+### Professional Use
+
+Teams run smoke tests locally and in delivery pipelines after producing a
+deployable artifact. Tests use isolated resource names, emit useful diagnostics
+on failure, and clean up whether they pass, fail, or are interrupted.
+
+### Common Mistakes
+
+- Checking only that a container process started
+- Trusting a health status without calling the public endpoint
+- Leaving failed containers and networks behind
+- Hiding service logs when an assertion fails
+- Depending on a developer's uncontrolled environment values
+- Reusing resource names that interfere with normal local services
+- Deleting the built image needed for later inspection
+
+### Best Practices
+
+- Use strict shell error handling and explicit assertions.
+- Validate prerequisites before creating resources.
+- Give test resources an isolated project name.
+- Supply deterministic, non-secret settings.
+- Test behavior and security properties through the running container.
+- Print logs only when they aid diagnosis.
+- Register cleanup before starting resources.
+- Preserve the test's original exit code during cleanup.

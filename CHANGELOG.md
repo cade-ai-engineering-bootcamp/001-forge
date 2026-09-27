@@ -36,5 +36,11 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
   contract.
 - Safe API-boundary translation for known application errors and unexpected
   exceptions, backed by HTTP integration tests.
+- Secure multi-stage container image with a minimal allowlisted build context,
+  frozen runtime dependencies, non-root execution, and an HTTP health check.
+- Local Compose workflow with safe configuration defaults, localhost-only
+  publishing, health-aware startup, and hardened runtime controls.
+- Executable container smoke test covering build, health, configuration,
+  non-root execution, runtime contents, and security controls.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

@@ -715,3 +715,135 @@ HTTP contracts and proving response behavior through ASGI integration tests.
 Review Step 6 and Feature 6.1 — Define a secure, cache-efficient Docker build
 context and image. Create the Step 6 branch only after Step 5 is reviewed and
 merged. Do not begin Feature 6.1 without separate approval.
+
+## 2026-09-27 — Feature 6.1: Secure Container Image
+
+### Session Goal
+
+Package the existing Forge service into a reproducible, cache-efficient,
+least-privilege image without changing application behavior.
+
+### Work Completed
+
+- Added an allowlisted Docker build context containing only required build
+  inputs.
+- Added a multi-stage build using the approved Python base and uv version.
+- Separated locked dependency installation from source installation for cache
+  reuse.
+- Installed only runtime dependencies and Forge as a non-editable package.
+- Created a minimal runtime stage containing only Python and the virtual
+  environment.
+- Added fixed non-root execution, exec-form Uvicorn startup, and a standard-
+  library HTTP health check.
+- Documented image build, direct execution, health, logs, and cleanup commands.
+
+### Validation Performed
+
+- Built `forge:feature-6.1` successfully from the frozen lockfile.
+- Confirmed a second build reused every dependency, source, and runtime layer.
+- Confirmed the container runs as UID and GID `10001:10001`.
+- Confirmed Docker reports the container as healthy and `/health` returns
+  `{"status":"ok"}` through the published host port.
+- Confirmed injected environment values load as `production` and JSON logging
+  is enabled.
+- Confirmed `.env`, `.git`, source, tests, project metadata, and uv are absent
+  from the final image.
+- Confirmed local quality gates and the whitespace check pass.
+
+### Scope Notes
+
+- No Python source, dependency, or lockfile changes were made.
+- No Compose file or reusable smoke-test script was introduced.
+- The temporary validation container was removed; the tagged image remains for
+  review and later Step 6 work.
+
+### Next Starting Point
+
+Review Feature 6.2 — Add Compose configuration for local service execution. Do
+not begin Feature 6.2 without separate approval.
+
+## 2026-09-27 — Feature 6.2: Secure Compose Execution
+
+### Session Goal
+
+Provide one predictable local lifecycle for the Forge image while preserving
+its immutable and least-privilege runtime model.
+
+### Work Completed
+
+- Added a single `api` Compose service that builds the Dockerfile runtime stage.
+- Added safe overridable defaults for environment, log level, and log format.
+- Published port 8000 only on the local host.
+- Reinforced non-root execution, removed Linux capabilities, prevented
+  privilege escalation, and made the root filesystem read-only.
+- Added an ephemeral writable `/tmp` area without mounting application source.
+- Documented Compose validation, startup, health, logs, and cleanup commands.
+
+### Validation Performed
+
+- Confirmed `docker compose config --quiet` accepts the configuration.
+- Built `forge:local` and waited for the service to become healthy.
+- Confirmed `/health` returns `{"status":"ok"}` through the published port.
+- Confirmed the service runs as UID and GID `10001:10001` with the expected
+  development settings.
+- Confirmed `/app` is read-only while `/tmp` remains writable.
+- Confirmed all Linux capabilities are dropped and privilege escalation is
+  disabled.
+- Confirmed startup and health requests appear in Compose logs.
+- Confirmed `docker compose down` removes the container and network cleanly.
+- Confirmed local quality gates and the whitespace check pass.
+
+### Scope Notes
+
+- No Dockerfile, Python source, dependency, or lockfile changes were made.
+- No source mounts, live reload, secret forwarding, or extra services were
+  added.
+- No reusable smoke-test script was introduced.
+
+### Next Starting Point
+
+Review Feature 6.3 — Add and execute a container smoke test. Do not begin
+Feature 6.3 without separate approval.
+
+## 2026-09-27 — Feature 6.3: Container Smoke Test
+
+### Session Goal
+
+Turn the Step 6 container requirements into one repeatable acceptance command
+that fails clearly and always cleans up its temporary resources.
+
+### Work Completed
+
+- Added an executable Bash smoke test with strict error handling.
+- Isolated test resources under the `forge-smoke` Compose project.
+- Added prerequisite, Compose configuration, build, startup, and health checks.
+- Added assertions for the exact API response, effective identity, injected
+  settings, runtime contents, writable paths, and container security controls.
+- Added failure-only service logs and exit-safe Compose cleanup.
+- Documented the smoke-test command, behavior, requirements, and failure mode.
+
+### Validation Performed
+
+- Confirmed the script passes Bash syntax validation.
+- Executed the script successfully against Docker Compose 5.3.1.
+- Confirmed the image builds and the service reaches healthy state.
+- Confirmed `/health` returns exactly `{"status":"ok"}`.
+- Confirmed the service runs as `10001:10001` with the controlled test settings.
+- Confirmed application files are read-only while `/tmp` remains writable.
+- Confirmed secrets, repository files, source, tests, metadata, and uv remain
+  absent from the runtime image.
+- Confirmed all capabilities are dropped and privilege escalation is disabled.
+- Confirmed the temporary container and network are removed after success.
+- Confirmed local quality gates and the whitespace check pass.
+
+### Scope Notes
+
+- No Python, Dockerfile, Compose, dependency, lockfile, or CI changes were made.
+- The test uses existing Docker, Compose, Bash, and curl tooling.
+- The built `forge:local` image remains available for inspection.
+
+### Next Starting Point
+
+Review Step 7 and Feature 7.1 — Create a least-privilege CI workflow with
+immutable action pins. Create the Step 7 branch only after Step 6 is reviewed
+and merged. Do not begin Feature 7.1 without separate approval.

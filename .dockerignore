@@ -1,0 +1,14 @@
+# Deny the repository by default, then admit only build inputs.
+**
+!.dockerignore
+!Dockerfile
+!LICENSE
+!README.md
+!pyproject.toml
+!uv.lock
+!src/
+!src/**
+
+# Keep generated Python files out even when they exist beneath src/.
+**/__pycache__/
+**/*.py[cod]

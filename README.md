@@ -7,9 +7,9 @@ business logic.
 
 > [!NOTE]
 > Forge is under active development. The reproducible environment and project
-> governance, quality gates, and FastAPI application factory are available now.
-> The health endpoint, container support, and continuous integration are
-> planned work.
+> governance, quality gates, FastAPI boundary, and production container image
+> are available now. Docker Compose and continuous integration are planned
+> work.
 
 ## Project Goals
 
@@ -236,6 +236,92 @@ This endpoint confirms only that the Forge process is running and responsive.
 It does not report dependency readiness, and Forge intentionally has no
 business routes.
 
+## Container Image
+
+Build the production image from the repository root:
+
+```bash
+docker build --tag forge:local .
+```
+
+Run Forge with production-oriented settings and publish it only on the local
+host:
+
+```bash
+docker run --detach \
+  --name forge \
+  --publish 127.0.0.1:8000:8000 \
+  --env FORGE_ENVIRONMENT=production \
+  --env FORGE_LOG_JSON=true \
+  forge:local
+```
+
+Inspect container health and application output:
+
+```bash
+docker inspect --format '{{.State.Health.Status}}' forge
+curl http://127.0.0.1:8000/health
+docker logs forge
+```
+
+Stop and remove the container when finished:
+
+```bash
+docker stop forge
+docker rm forge
+```
+
+The image installs only locked runtime dependencies and runs as the fixed
+unprivileged user `10001:10001`. The allowlisted build context excludes local
+environments, credentials, Git history, tests, caches, and development records.
+Runtime configuration is supplied through environment variables rather than
+baked into image layers.
+
+### Docker Compose
+
+Validate the Compose configuration, then build and start Forge in the
+background while waiting for its health check:
+
+```bash
+docker compose config --quiet
+docker compose up --build --detach --wait
+```
+
+Inspect the service, call the API, and follow its logs:
+
+```bash
+docker compose ps
+curl http://127.0.0.1:8000/health
+docker compose logs --follow api
+```
+
+Stop the service and remove its container and network:
+
+```bash
+docker compose down
+```
+
+Compose uses development-safe settings by default. Set
+`FORGE_ENVIRONMENT`, `FORGE_LOG_LEVEL`, or `FORGE_LOG_JSON` in the shell or an
+ignored local `.env` file to override them. The service remains bound to the
+local host, runs as `10001:10001`, drops all Linux capabilities, prevents
+privilege escalation, and uses a read-only root filesystem with an ephemeral
+`/tmp` scratch area. It does not mount the source tree or pass an API key.
+
+### Container Smoke Test
+
+Run the complete container acceptance check from the repository root:
+
+```bash
+./scripts/container_smoke_test.sh
+```
+
+The script requires Docker with Compose and `curl`. It builds and starts Forge
+under the isolated `forge-smoke` project, waits for health, verifies the API,
+runtime settings, non-root identity, filesystem restrictions, image contents,
+and Linux security controls, then removes its temporary container and network.
+If a check fails, it prints the service logs before cleanup and exits nonzero.
+
 ## Local Quality Checks
 
 Verify that Python files match Black's formatting rules:
@@ -273,13 +359,17 @@ package without adding `src` directly to Python's import path.
 ```text
 .
 ├── docs/               # Agenda, journal, decisions, and learning records
+├── scripts/            # Repeatable operational checks
 ├── src/
 │   └── forge/           # Installable Python import package
 ├── tests/
 │   └── unit/            # Fast, isolated package tests
 ├── .env.example        # Safe environment-variable contract
+├── .dockerignore       # Allowlisted Docker build context
 ├── .python-version     # Required Python interpreter version
 ├── CHANGELOG.md        # Notable project changes
+├── compose.yaml        # Secure local service orchestration
+├── Dockerfile          # Multi-stage production container image
 ├── LICENSE             # MIT license
 ├── pyproject.toml      # Project metadata and dependency declarations
 └── uv.lock             # Exact resolved dependency graph
