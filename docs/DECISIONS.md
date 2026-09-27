@@ -432,3 +432,43 @@ data. Leave FastAPI's built-in validation and HTTP exception handling intact.
 - New application error categories require an explicit adapter mapping.
 - Integration tests create failing routes only on their local application
   instances; the production application still exposes only `/health`.
+
+## Decision 014 — Build a Minimal Non-Root Runtime Image
+
+- **Status:** Accepted
+- **Date:** 2026-09-27
+
+### Context
+
+Forge needs a repeatable container artifact without copying the development
+repository, build tools, or credentials into production. Dependency changes
+should not invalidate source-independent layers, and the service must not run
+with root privileges.
+
+### Decision
+
+Use an allowlisted Docker build context and a multi-stage Dockerfile. Build
+against `python:3.14.7-slim-bookworm`, obtain uv 0.12.3 from its official image,
+install frozen runtime dependencies before copying source, and install Forge
+non-editably. Copy only the completed virtual environment into a fresh Python
+runtime stage. Run Uvicorn as fixed UID and GID 10001, use exec-form startup,
+and implement the image health check with Python's standard library.
+
+### Alternatives Considered
+
+- Copy the entire repository and exclude files individually.
+- Install development dependencies in the runtime image.
+- Run Uvicorn as the image's default root user.
+- Install curl only for the health check.
+- Copy uv and application source into the runtime stage.
+- Use a single-stage Dockerfile.
+
+### Consequences
+
+- Secrets and development-only files are denied from the build context by
+  default.
+- Dependency installation remains cached when only Forge source changes.
+- The final image contains neither uv nor the source repository layout.
+- Runtime configuration remains external to the immutable image.
+- The health check adds no operating-system package.
+- Base-image and uv tags must be updated deliberately during maintenance.

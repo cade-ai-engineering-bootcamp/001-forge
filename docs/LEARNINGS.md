@@ -695,3 +695,44 @@ diagnostic channels.
 - Keep internal details and tracebacks outside response bodies.
 - Test through the real framework boundary with exception propagation disabled.
 - Build failure routes only on isolated test applications.
+
+## Secure and Cache-Efficient Container Images
+
+### Simple Explanation
+
+A container image packages an application and its runtime files into immutable
+layers. A multi-stage build uses one temporary environment to assemble the
+application and a smaller final environment to run it.
+
+### Why It Exists
+
+Copying an entire development repository into one image can include secrets,
+tools, and files the service never needs. Poorly ordered layers also reinstall
+dependencies whenever application source changes.
+
+### Professional Use
+
+Production services use narrow build contexts, deterministic dependency
+installation, non-root users, and direct process startup. Build systems reuse
+unchanged layers to make frequent source-only builds faster.
+
+### Common Mistakes
+
+- Sending `.env`, `.git`, or local virtual environments to the builder
+- Installing test and formatting tools in the runtime image
+- Copying source before resolving dependencies and defeating the cache
+- Running the service as root
+- Using shell-form commands that interfere with signal delivery
+- Installing an operating-system HTTP client only for health checks
+- Baking environment-specific configuration into image layers
+
+### Best Practices
+
+- Deny the build context by default and allow only required inputs.
+- Separate dependency and application installation layers.
+- Enforce the committed lockfile during image construction.
+- Use build-cache mounts without copying caches into the final image.
+- Install the project non-editably for an immutable runtime layout.
+- Copy only runtime artifacts into the final stage.
+- Use a fixed unprivileged identity and exec-form startup.
+- Supply configuration at container runtime.

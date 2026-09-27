@@ -715,3 +715,49 @@ HTTP contracts and proving response behavior through ASGI integration tests.
 Review Step 6 and Feature 6.1 — Define a secure, cache-efficient Docker build
 context and image. Create the Step 6 branch only after Step 5 is reviewed and
 merged. Do not begin Feature 6.1 without separate approval.
+
+## 2026-09-27 — Feature 6.1: Secure Container Image
+
+### Session Goal
+
+Package the existing Forge service into a reproducible, cache-efficient,
+least-privilege image without changing application behavior.
+
+### Work Completed
+
+- Added an allowlisted Docker build context containing only required build
+  inputs.
+- Added a multi-stage build using the approved Python base and uv version.
+- Separated locked dependency installation from source installation for cache
+  reuse.
+- Installed only runtime dependencies and Forge as a non-editable package.
+- Created a minimal runtime stage containing only Python and the virtual
+  environment.
+- Added fixed non-root execution, exec-form Uvicorn startup, and a standard-
+  library HTTP health check.
+- Documented image build, direct execution, health, logs, and cleanup commands.
+
+### Validation Performed
+
+- Built `forge:feature-6.1` successfully from the frozen lockfile.
+- Confirmed a second build reused every dependency, source, and runtime layer.
+- Confirmed the container runs as UID and GID `10001:10001`.
+- Confirmed Docker reports the container as healthy and `/health` returns
+  `{"status":"ok"}` through the published host port.
+- Confirmed injected environment values load as `production` and JSON logging
+  is enabled.
+- Confirmed `.env`, `.git`, source, tests, project metadata, and uv are absent
+  from the final image.
+- Confirmed local quality gates and the whitespace check pass.
+
+### Scope Notes
+
+- No Python source, dependency, or lockfile changes were made.
+- No Compose file or reusable smoke-test script was introduced.
+- The temporary validation container was removed; the tagged image remains for
+  review and later Step 6 work.
+
+### Next Starting Point
+
+Review Feature 6.2 — Add Compose configuration for local service execution. Do
+not begin Feature 6.2 without separate approval.

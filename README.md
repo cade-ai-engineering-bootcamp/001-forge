@@ -7,9 +7,9 @@ business logic.
 
 > [!NOTE]
 > Forge is under active development. The reproducible environment and project
-> governance, quality gates, and FastAPI application factory are available now.
-> The health endpoint, container support, and continuous integration are
-> planned work.
+> governance, quality gates, FastAPI boundary, and production container image
+> are available now. Docker Compose and continuous integration are planned
+> work.
 
 ## Project Goals
 
@@ -236,6 +236,48 @@ This endpoint confirms only that the Forge process is running and responsive.
 It does not report dependency readiness, and Forge intentionally has no
 business routes.
 
+## Container Image
+
+Build the production image from the repository root:
+
+```bash
+docker build --tag forge:local .
+```
+
+Run Forge with production-oriented settings and publish it only on the local
+host:
+
+```bash
+docker run --detach \
+  --name forge \
+  --publish 127.0.0.1:8000:8000 \
+  --env FORGE_ENVIRONMENT=production \
+  --env FORGE_LOG_JSON=true \
+  forge:local
+```
+
+Inspect container health and application output:
+
+```bash
+docker inspect --format '{{.State.Health.Status}}' forge
+curl http://127.0.0.1:8000/health
+docker logs forge
+```
+
+Stop and remove the container when finished:
+
+```bash
+docker stop forge
+docker rm forge
+```
+
+The image installs only locked runtime dependencies and runs as the fixed
+unprivileged user `10001:10001`. The allowlisted build context excludes local
+environments, credentials, Git history, tests, caches, and development records.
+Runtime configuration is supplied through environment variables rather than
+baked into image layers. Compose-based execution is introduced separately in
+Feature 6.2.
+
 ## Local Quality Checks
 
 Verify that Python files match Black's formatting rules:
@@ -278,8 +320,10 @@ package without adding `src` directly to Python's import path.
 ├── tests/
 │   └── unit/            # Fast, isolated package tests
 ├── .env.example        # Safe environment-variable contract
+├── .dockerignore       # Allowlisted Docker build context
 ├── .python-version     # Required Python interpreter version
 ├── CHANGELOG.md        # Notable project changes
+├── Dockerfile          # Multi-stage production container image
 ├── LICENSE             # MIT license
 ├── pyproject.toml      # Project metadata and dependency declarations
 └── uv.lock             # Exact resolved dependency graph
