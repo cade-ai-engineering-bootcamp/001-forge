@@ -510,3 +510,80 @@ ephemeral `/tmp` filesystem. Do not mount source or pass an API key.
 - Non-secret settings can vary without rebuilding the image.
 - Source-editing workflows require a rebuild instead of live reload.
 - Secret delivery remains an explicit future-project responsibility.
+
+## Decision 016 — Run CI with Least Privilege and Immutable Action References
+
+- **Status:** Accepted
+- **Date:** 2026-10-02
+
+### Context
+
+GitHub Actions workflows execute code from the repository and from reusable
+third-party actions. Broad token permissions or mutable action tags would let a
+routine quality workflow perform unnecessary repository mutations or silently
+receive different action code in a later run.
+
+### Decision
+
+Run CI for pull requests targeting `main` and pushes to `main` on the fixed
+`ubuntu-24.04` runner. Grant the workflow only read access to repository
+contents. Pin every external action to a full commit SHA, retain the release
+tag in a comment for maintainability, and disable persisted checkout
+credentials. Bound jobs with a timeout and cancel superseded runs for the same
+workflow and Git reference.
+
+### Alternatives Considered
+
+- Rely on GitHub's default workflow permissions.
+- Grant write permissions in case they are useful later.
+- Reference actions by a moving major-version tag.
+- Allow checkout to persist the GitHub token in Git configuration.
+- Run every historical commit even after a newer one supersedes it.
+
+### Consequences
+
+- CI can read the repository but cannot modify its contents.
+- Reviewed action code cannot change until its pinned SHA is updated.
+- Release comments make pinned actions understandable to maintainers.
+- Future actions must declare and justify any additional permissions.
+- Action upgrades require an explicit review and SHA change.
+- Superseded work is canceled and stalled jobs cannot run indefinitely.
+
+## Decision 017 — Reproduce CI Environments from Locked Inputs
+
+- **Status:** Accepted
+- **Date:** 2026-10-02
+
+### Context
+
+CI must reproduce the environment developers verified locally without silently
+selecting newer Python, uv, or package versions. Repeatedly downloading the same
+artifacts wastes time, but restoring an entire virtual environment would make
+job state less transparent and less portable.
+
+### Decision
+
+Use the official `astral-sh/setup-uv` action pinned to the full commit SHA for
+v10.2.0. Configure it to install uv 0.12.3 and managed Python 3.14.7. Cache uv's
+disposable download and build artifacts using `uv.lock` as the dependency input,
+retain the action's event-aware automatic cache protection, and prune the cache
+for CI before saving. Recreate `.venv` on each runner with `uv sync --frozen`.
+
+### Alternatives Considered
+
+- Install the latest available uv and Python releases on every run.
+- Let `uv sync` update the lockfile during CI.
+- Cache and restore the complete `.venv` directory.
+- Maintain a separate cache action and manual cache key.
+- Disable caching entirely.
+
+### Consequences
+
+- Local and CI environments use the same pinned interpreter, package manager,
+  and locked dependencies.
+- CI cannot rewrite the dependency lockfile.
+- Cache invalidation follows changes to `uv.lock` and setup-uv's platform and
+  Python inputs.
+- Every job constructs its environment rather than trusting a saved `.venv`.
+- Cache contents remain disposable performance data, not a correctness input.
+- Python, uv, and setup-uv upgrades require explicit review.

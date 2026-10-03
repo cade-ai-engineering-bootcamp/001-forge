@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 71% (22 of 31 features complete)
-- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions; Step 5 — FastAPI-Ready Application Boundary; Step 6 — Containerization
-- **Current step:** Step 7 — Continuous Integration
-- **Current feature:** Feature 7.1 — Create a least-privilege CI workflow with immutable action pins
-- **Estimated remaining focused time:** Approximately 2 hours 45 minutes
+- **Overall progress:** 81% (25 of 31 features complete)
+- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions; Step 5 — FastAPI-Ready Application Boundary; Step 6 — Containerization; Step 7 — Continuous Integration
+- **Current step:** Step 8 — Documentation and Reuse Validation
+- **Current feature:** Feature 8.1 — Complete setup, usage, testing, container, and troubleshooting documentation
+- **Estimated remaining focused time:** Approximately 1 hour 45 minutes
 
 ## Completed Work
 
@@ -49,10 +49,13 @@ specific AI or business logic.
 - [x] Built and validated the secure, cache-efficient Forge container image.
 - [x] Added and validated secure local service execution through Compose.
 - [x] Added and passed the end-to-end container smoke test.
+- [x] Created a least-privilege CI workflow shell with immutable action pinning.
+- [x] Added frozen CI dependency synchronization and safe uv artifact caching.
+- [x] Passed the hosted CI formatting, linting, typing, test, and coverage gates.
 
 ## Remaining Work
 
-- [ ] Complete Steps 7–9 and the graduation review.
+- [ ] Complete Steps 8–9 and the graduation review.
 - [ ] Verify all local, container, and CI quality gates.
 - [ ] Demonstrate that a new project can start from Forge in under 10 minutes.
 
@@ -617,9 +620,9 @@ machine.
 
 ### Features
 
-- [ ] **7.1** Create a least-privilege CI workflow with immutable action pins.
-- [ ] **7.2** Add frozen dependency synchronization and safe caching.
-- [ ] **7.3** Run formatting, linting, typing, tests, and coverage in CI.
+- [x] **7.1** Create a least-privilege CI workflow with immutable action pins.
+- [x] **7.2** Add frozen dependency synchronization and safe caching.
+- [x] **7.3** Run formatting, linting, typing, tests, and coverage in CI.
 
 ### Learning Objectives
 

@@ -847,3 +847,127 @@ that fails clearly and always cleans up its temporary resources.
 Review Step 7 and Feature 7.1 — Create a least-privilege CI workflow with
 immutable action pins. Create the Step 7 branch only after Step 6 is reviewed
 and merged. Do not begin Feature 7.1 without separate approval.
+
+## 2026-10-02 — Feature 7.1: Least-Privilege CI Workflow Shell
+
+### Session Goal
+
+Create the secure GitHub Actions boundary before adding dependency installation
+or quality commands.
+
+### Work Completed
+
+- Added a CI workflow for pull requests targeting `main` and pushes to `main`.
+- Selected the fixed `ubuntu-24.04` runner and bounded the job to 10 minutes.
+- Granted only `contents: read` permission to the workflow token.
+- Pinned `actions/checkout` v7.0.1 to its full commit SHA.
+- Disabled persisted checkout credentials.
+- Added concurrency controls that cancel superseded runs for the same ref.
+- Recorded the permissions and immutable-pinning decision.
+
+### Validation Performed
+
+- Confirmed the workflow file parses as YAML.
+- Confirmed the workflow contains only the approved triggers.
+- Confirmed the only external action reference is a 40-character commit SHA.
+- Confirmed permissions are explicit and read-only.
+- Confirmed checkout does not persist credentials.
+- Confirmed no dependency, cache, quality-gate, or deployment steps were added.
+- Confirmed existing local quality gates and the whitespace check pass.
+
+### Scope Notes
+
+- No Python source, tests, dependencies, lockfile, containers, or README were
+  changed.
+- Dependency synchronization and caching remain Feature 7.2.
+- Formatting, linting, typing, tests, and coverage remain Feature 7.3.
+- The real GitHub run will be verified after the Step 7 branch is pushed.
+
+### Next Starting Point
+
+Review Feature 7.2 — Add frozen dependency synchronization and safe caching.
+Do not begin Feature 7.2 without separate approval.
+
+## 2026-10-02 — Feature 7.2: Frozen CI Synchronization and Safe Caching
+
+### Session Goal
+
+Reproduce Forge's pinned development environment in CI while caching only
+disposable uv artifacts.
+
+### Work Completed
+
+- Added `astral-sh/setup-uv` v10.2.0 at its full commit SHA.
+- Configured CI to use uv 0.12.3 and managed Python 3.14.7.
+- Enabled setup-uv's event-aware automatic cache behavior.
+- Made `uv.lock` the dependency input for cache invalidation.
+- Enabled CI-oriented cache pruning before save.
+- Added frozen synchronization through `uv sync --frozen`.
+- Recorded the reproducibility and caching decision.
+
+### Validation Performed
+
+- Confirmed the workflow file parses as YAML.
+- Confirmed every external action reference is a 40-character commit SHA.
+- Confirmed the setup action and installed tool versions are explicit.
+- Confirmed the cache follows `uv.lock` and does not persist `.venv`.
+- Confirmed dependency synchronization uses `--frozen`.
+- Confirmed existing local quality gates and the whitespace check pass.
+
+### Scope Notes
+
+- No source, tests, dependencies, lockfile, containers, or README were changed.
+- No formatting, linting, typing, test, coverage, or deployment command was
+  added to the workflow.
+- The real GitHub cache and synchronization run will be verified after push.
+
+### Next Starting Point
+
+Review Feature 7.3 — Run formatting, linting, typing, tests, and coverage in CI.
+Do not begin Feature 7.3 without separate approval.
+
+## 2026-10-02 — Feature 7.3: CI Quality Gates
+
+### Session Goal
+
+Make GitHub run the same formatting, linting, typing, test, and coverage gates
+that developers run locally.
+
+### Work Completed
+
+- Added separate Black, Ruff, MyPy, and Pytest workflow steps.
+- Reused the exact commands documented for local development.
+- Kept branch coverage and the 90% threshold centralized in `pyproject.toml`.
+- Added a README CI status badge and documented triggers and checks.
+- Added failure-troubleshooting and local-reproduction instructions.
+
+### Local Validation Performed
+
+- Confirmed the workflow file parses as YAML.
+- Confirmed every external action remains pinned to a full commit SHA.
+- Confirmed frozen dependency synchronization succeeds.
+- Confirmed Black, Ruff, MyPy, Pytest, and the coverage gate pass locally.
+- Confirmed the whitespace and scope checks pass.
+
+### Hosted Acceptance Evidence
+
+- Opened pull request #8 from `feature/step-7-continuous-integration` into
+  `main`.
+- Confirmed GitHub triggered the workflow with the `pull_request` event.
+- Confirmed checkout, uv and Python setup, frozen synchronization, Black, Ruff,
+  MyPy, Pytest with coverage, and post-job cache handling all passed.
+- Confirmed the `Quality` job completed successfully for commit
+  `0bcc14817e0673ae79443b66fa83355dfd10d382`.
+- Recorded hosted run `37085328321` as the acceptance evidence for Step 7.
+
+### Scope Notes
+
+- No source, test, dependency, lockfile, container, or deployment changes were
+  made.
+- Docker validation remains a local acceptance check rather than a CI job.
+- Step 8 remains unapproved and has not started.
+
+### Next Starting Point
+
+Commit and push the hosted-validation record, confirm the final CI rerun, then
+squash and merge pull request #8. Do not begin Step 8 without separate approval.

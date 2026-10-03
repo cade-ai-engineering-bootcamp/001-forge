@@ -817,3 +817,121 @@ on failure, and clean up whether they pass, fail, or are interrupted.
 - Print logs only when they aid diagnosis.
 - Register cleanup before starting resources.
 - Preserve the test's original exit code during cleanup.
+
+## Least-Privilege and Immutable CI Workflows
+
+### Simple Explanation
+
+A CI workflow is a robot that follows instructions inside GitHub. The robot
+should receive only the keys it needs, and every borrowed tool should point to
+one exact, reviewed version.
+
+### Why It Exists
+
+Workflow jobs execute repository code automatically. Explicit read-only
+permissions reduce the damage a faulty or compromised step could cause, while
+full commit-SHA action pins prevent a tag from silently selecting different
+code on a later run.
+
+### Professional Use
+
+Teams treat workflow files as production code. They minimize token permissions,
+pin external actions immutably, limit execution time, avoid retaining
+credentials, and cancel obsolete runs to protect both repositories and CI
+capacity.
+
+### Common Mistakes
+
+- Accepting broad default token permissions
+- Giving write access to a read-only quality job
+- Pinning actions only to moving tags such as `v7`
+- Persisting credentials when later steps do not need Git authentication
+- Omitting timeouts from jobs that can stall
+- Spending runner time on commits superseded by newer pushes
+
+### Best Practices
+
+- Declare workflow permissions explicitly.
+- Add permissions only when a step proves it needs them.
+- Pin every external action to a full commit SHA.
+- Preserve the human-readable release tag in an adjacent comment.
+- Disable persisted checkout credentials for read-only jobs.
+- Use fixed runner labels, timeouts, and concurrency controls.
+- Review action upgrades as dependency changes.
+
+## Frozen CI Environments and Safe Dependency Caching
+
+### Simple Explanation
+
+The lockfile is a shopping list with exact items. CI follows that list without
+changing it, while its cache is only a pantry of reusable packages that can be
+thrown away and rebuilt at any time.
+
+### Why It Exists
+
+Using the latest available tools or allowing CI to rewrite dependency choices
+can make a passing job impossible to reproduce. Caching a whole virtual
+environment creates another hidden source of truth. Frozen synchronization
+keeps correctness in versioned files while an artifact cache improves speed.
+
+### Professional Use
+
+Teams pin runtimes and package managers, install from committed lockfiles, and
+cache downloadable or buildable artifacts using keys derived from dependency
+inputs. CI environments themselves remain ephemeral and reconstructible.
+
+### Common Mistakes
+
+- Installing whichever Python or package-manager version is newest
+- Updating the lockfile inside a verification job
+- Treating a restored virtual environment as the source of truth
+- Using cache keys unrelated to dependency inputs
+- Assuming a cache hit proves the environment is correct
+- Making builds fail merely because a disposable cache is missing
+
+### Best Practices
+
+- Pin the interpreter and dependency-management tool.
+- Commit the lockfile and synchronize it in frozen mode.
+- Cache artifacts rather than complete environments.
+- Derive cache invalidation from the lockfile.
+- Keep cache behavior aware of sensitive workflow event types.
+- Prune CI caches before saving when supported.
+- Design every job to succeed from an empty cache.
+
+## Local and CI Quality-Gate Parity
+
+### Simple Explanation
+
+Developers and GitHub should use the same checklist. If both run the same
+commands, a green check on a laptop means the GitHub robot is likely to agree.
+
+### Why It Exists
+
+Special CI-only commands create two definitions of correctness and make
+failures harder to reproduce. Exact command parity turns CI failures into local
+problems that can be diagnosed before another push.
+
+### Professional Use
+
+Teams keep tool configuration in versioned project files and give each CI gate
+its own named step. Pull requests expose the failing category immediately,
+while developers can copy the same command into their terminal.
+
+### Common Mistakes
+
+- Combining every check into one opaque shell command
+- Running different options locally and in CI
+- Defining coverage thresholds only in workflow YAML
+- Skipping a failing gate instead of fixing its cause
+- Treating a green dependency-install step as proof that code is correct
+- Claiming CI works before observing a real hosted run
+
+### Best Practices
+
+- Use one clearly named workflow step per quality category.
+- Keep shared tool behavior in `pyproject.toml`.
+- Run the exact local commands in CI.
+- Stop on the first failing command and preserve its output.
+- Reproduce failures from a frozen environment.
+- Require hosted-run evidence before declaring CI complete.
