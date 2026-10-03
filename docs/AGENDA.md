@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 71% (22 of 31 features complete)
+- **Overall progress:** 74% (23 of 31 features complete)
 - **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions; Step 5 — FastAPI-Ready Application Boundary; Step 6 — Containerization
 - **Current step:** Step 7 — Continuous Integration
-- **Current feature:** Feature 7.1 — Create a least-privilege CI workflow with immutable action pins
-- **Estimated remaining focused time:** Approximately 2 hours 45 minutes
+- **Current feature:** Feature 7.2 — Add frozen dependency synchronization and safe caching
+- **Estimated remaining focused time:** Approximately 2 hours 25 minutes
 
 ## Completed Work
 
@@ -49,6 +49,7 @@ specific AI or business logic.
 - [x] Built and validated the secure, cache-efficient Forge container image.
 - [x] Added and validated secure local service execution through Compose.
 - [x] Added and passed the end-to-end container smoke test.
+- [x] Created a least-privilege CI workflow shell with immutable action pinning.
 
 ## Remaining Work
 
@@ -617,7 +618,7 @@ machine.
 
 ### Features
 
-- [ ] **7.1** Create a least-privilege CI workflow with immutable action pins.
+- [x] **7.1** Create a least-privilege CI workflow with immutable action pins.
 - [ ] **7.2** Add frozen dependency synchronization and safe caching.
 - [ ] **7.3** Run formatting, linting, typing, tests, and coverage in CI.
 

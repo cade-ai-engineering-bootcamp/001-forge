@@ -510,3 +510,41 @@ ephemeral `/tmp` filesystem. Do not mount source or pass an API key.
 - Non-secret settings can vary without rebuilding the image.
 - Source-editing workflows require a rebuild instead of live reload.
 - Secret delivery remains an explicit future-project responsibility.
+
+## Decision 016 — Run CI with Least Privilege and Immutable Action References
+
+- **Status:** Accepted
+- **Date:** 2026-10-02
+
+### Context
+
+GitHub Actions workflows execute code from the repository and from reusable
+third-party actions. Broad token permissions or mutable action tags would let a
+routine quality workflow perform unnecessary repository mutations or silently
+receive different action code in a later run.
+
+### Decision
+
+Run CI for pull requests targeting `main` and pushes to `main` on the fixed
+`ubuntu-24.04` runner. Grant the workflow only read access to repository
+contents. Pin every external action to a full commit SHA, retain the release
+tag in a comment for maintainability, and disable persisted checkout
+credentials. Bound jobs with a timeout and cancel superseded runs for the same
+workflow and Git reference.
+
+### Alternatives Considered
+
+- Rely on GitHub's default workflow permissions.
+- Grant write permissions in case they are useful later.
+- Reference actions by a moving major-version tag.
+- Allow checkout to persist the GitHub token in Git configuration.
+- Run every historical commit even after a newer one supersedes it.
+
+### Consequences
+
+- CI can read the repository but cannot modify its contents.
+- Reviewed action code cannot change until its pinned SHA is updated.
+- Release comments make pinned actions understandable to maintainers.
+- Future actions must declare and justify any additional permissions.
+- Action upgrades require an explicit review and SHA change.
+- Superseded work is canceled and stalled jobs cannot run indefinitely.

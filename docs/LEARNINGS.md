@@ -817,3 +817,44 @@ on failure, and clean up whether they pass, fail, or are interrupted.
 - Print logs only when they aid diagnosis.
 - Register cleanup before starting resources.
 - Preserve the test's original exit code during cleanup.
+
+## Least-Privilege and Immutable CI Workflows
+
+### Simple Explanation
+
+A CI workflow is a robot that follows instructions inside GitHub. The robot
+should receive only the keys it needs, and every borrowed tool should point to
+one exact, reviewed version.
+
+### Why It Exists
+
+Workflow jobs execute repository code automatically. Explicit read-only
+permissions reduce the damage a faulty or compromised step could cause, while
+full commit-SHA action pins prevent a tag from silently selecting different
+code on a later run.
+
+### Professional Use
+
+Teams treat workflow files as production code. They minimize token permissions,
+pin external actions immutably, limit execution time, avoid retaining
+credentials, and cancel obsolete runs to protect both repositories and CI
+capacity.
+
+### Common Mistakes
+
+- Accepting broad default token permissions
+- Giving write access to a read-only quality job
+- Pinning actions only to moving tags such as `v7`
+- Persisting credentials when later steps do not need Git authentication
+- Omitting timeouts from jobs that can stall
+- Spending runner time on commits superseded by newer pushes
+
+### Best Practices
+
+- Declare workflow permissions explicitly.
+- Add permissions only when a step proves it needs them.
+- Pin every external action to a full commit SHA.
+- Preserve the human-readable release tag in an adjacent comment.
+- Disable persisted checkout credentials for read-only jobs.
+- Use fixed runner labels, timeouts, and concurrency controls.
+- Review action upgrades as dependency changes.

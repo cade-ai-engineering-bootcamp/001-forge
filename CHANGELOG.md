@@ -42,5 +42,7 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
   publishing, health-aware startup, and hardened runtime controls.
 - Executable container smoke test covering build, health, configuration,
   non-root execution, runtime contents, and security controls.
+- Least-privilege GitHub Actions workflow shell with immutable action pinning,
+  protected triggers, bounded execution, and credential-safe checkout.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

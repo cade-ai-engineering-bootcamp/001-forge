@@ -847,3 +847,43 @@ that fails clearly and always cleans up its temporary resources.
 Review Step 7 and Feature 7.1 — Create a least-privilege CI workflow with
 immutable action pins. Create the Step 7 branch only after Step 6 is reviewed
 and merged. Do not begin Feature 7.1 without separate approval.
+
+## 2026-10-02 — Feature 7.1: Least-Privilege CI Workflow Shell
+
+### Session Goal
+
+Create the secure GitHub Actions boundary before adding dependency installation
+or quality commands.
+
+### Work Completed
+
+- Added a CI workflow for pull requests targeting `main` and pushes to `main`.
+- Selected the fixed `ubuntu-24.04` runner and bounded the job to 10 minutes.
+- Granted only `contents: read` permission to the workflow token.
+- Pinned `actions/checkout` v7.0.1 to its full commit SHA.
+- Disabled persisted checkout credentials.
+- Added concurrency controls that cancel superseded runs for the same ref.
+- Recorded the permissions and immutable-pinning decision.
+
+### Validation Performed
+
+- Confirmed the workflow file parses as YAML.
+- Confirmed the workflow contains only the approved triggers.
+- Confirmed the only external action reference is a 40-character commit SHA.
+- Confirmed permissions are explicit and read-only.
+- Confirmed checkout does not persist credentials.
+- Confirmed no dependency, cache, quality-gate, or deployment steps were added.
+- Confirmed existing local quality gates and the whitespace check pass.
+
+### Scope Notes
+
+- No Python source, tests, dependencies, lockfile, containers, or README were
+  changed.
+- Dependency synchronization and caching remain Feature 7.2.
+- Formatting, linting, typing, tests, and coverage remain Feature 7.3.
+- The real GitHub run will be verified after the Step 7 branch is pushed.
+
+### Next Starting Point
+
+Review Feature 7.2 — Add frozen dependency synchronization and safe caching.
+Do not begin Feature 7.2 without separate approval.
