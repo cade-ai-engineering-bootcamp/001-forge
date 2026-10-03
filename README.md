@@ -1,5 +1,7 @@
 # Forge
 
+[![CI](https://github.com/cade-ai-engineering-bootcamp/001-forge/actions/workflows/ci.yml/badge.svg)](https://github.com/cade-ai-engineering-bootcamp/001-forge/actions/workflows/ci.yml)
+
 Forge is a reusable, production-quality Python engineering starter kit for
 future AI systems. It establishes the operational foundation those systems
 need without introducing model-provider integrations or application-specific
@@ -8,8 +10,8 @@ business logic.
 > [!NOTE]
 > Forge is under active development. The reproducible environment and project
 > governance, quality gates, FastAPI boundary, and production container image
-> are available now. Docker Compose and continuous integration are planned
-> work.
+> are available now, together with Docker Compose and continuous integration.
+> Documentation and reuse validation remain in progress.
 
 ## Project Goals
 
@@ -353,6 +355,19 @@ linting and import rules so the tools do not compete to rewrite the same code.
 MyPy analyzes type relationships without changing files or validating runtime
 input. Pytest discovers tests under `tests/` and measures the installed `forge`
 package without adding `src` directly to Python's import path.
+
+## Continuous Integration
+
+The [CI workflow](.github/workflows/ci.yml) runs for pull requests targeting
+`main` and pushes to `main`. It recreates the pinned uv and Python environment,
+synchronizes `uv.lock` without changing it, and runs the same Black, Ruff,
+MyPy, Pytest, and coverage checks documented above.
+
+If CI fails, open the workflow run, expand the first failed step, and reproduce
+its displayed command from the repository root after running
+`uv sync --frozen`. Fix the underlying code, configuration, test, or lockfile
+issue locally; do not weaken or skip the failing check. Push the correction to
+the same pull-request branch to start a new run.
 
 ## Repository Layout
 

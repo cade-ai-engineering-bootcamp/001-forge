@@ -898,3 +898,40 @@ inputs. CI environments themselves remain ephemeral and reconstructible.
 - Keep cache behavior aware of sensitive workflow event types.
 - Prune CI caches before saving when supported.
 - Design every job to succeed from an empty cache.
+
+## Local and CI Quality-Gate Parity
+
+### Simple Explanation
+
+Developers and GitHub should use the same checklist. If both run the same
+commands, a green check on a laptop means the GitHub robot is likely to agree.
+
+### Why It Exists
+
+Special CI-only commands create two definitions of correctness and make
+failures harder to reproduce. Exact command parity turns CI failures into local
+problems that can be diagnosed before another push.
+
+### Professional Use
+
+Teams keep tool configuration in versioned project files and give each CI gate
+its own named step. Pull requests expose the failing category immediately,
+while developers can copy the same command into their terminal.
+
+### Common Mistakes
+
+- Combining every check into one opaque shell command
+- Running different options locally and in CI
+- Defining coverage thresholds only in workflow YAML
+- Skipping a failing gate instead of fixing its cause
+- Treating a green dependency-install step as proof that code is correct
+- Claiming CI works before observing a real hosted run
+
+### Best Practices
+
+- Use one clearly named workflow step per quality category.
+- Keep shared tool behavior in `pyproject.toml`.
+- Run the exact local commands in CI.
+- Stop on the first failing command and preserve its output.
+- Reproduce failures from a frozen environment.
+- Require hosted-run evidence before declaring CI complete.

@@ -925,3 +925,46 @@ disposable uv artifacts.
 
 Review Feature 7.3 — Run formatting, linting, typing, tests, and coverage in CI.
 Do not begin Feature 7.3 without separate approval.
+
+## 2026-10-02 — Feature 7.3: CI Quality Gates
+
+### Session Goal
+
+Make GitHub run the same formatting, linting, typing, test, and coverage gates
+that developers run locally.
+
+### Work Completed
+
+- Added separate Black, Ruff, MyPy, and Pytest workflow steps.
+- Reused the exact commands documented for local development.
+- Kept branch coverage and the 90% threshold centralized in `pyproject.toml`.
+- Added a README CI status badge and documented triggers and checks.
+- Added failure-troubleshooting and local-reproduction instructions.
+
+### Local Validation Performed
+
+- Confirmed the workflow file parses as YAML.
+- Confirmed every external action remains pinned to a full commit SHA.
+- Confirmed frozen dependency synchronization succeeds.
+- Confirmed Black, Ruff, MyPy, Pytest, and the coverage gate pass locally.
+- Confirmed the whitespace and scope checks pass.
+
+### Pending Acceptance Evidence
+
+- Push the completed Step 7 branch and open its pull request.
+- Confirm GitHub starts the workflow for the pull request.
+- Confirm environment setup, caching, and all four quality steps pass.
+- Record the successful GitHub run before declaring Feature 7.3 and Step 7
+  complete.
+
+### Scope Notes
+
+- No source, test, dependency, lockfile, container, or deployment changes were
+  made.
+- Docker validation remains a local acceptance check rather than a CI job.
+- Step 8 remains unapproved and has not started.
+
+### Next Starting Point
+
+Commit and push Feature 7.3, open the Step 7 pull request, and verify its real
+GitHub Actions run. Do not begin Step 8 without separate approval.
