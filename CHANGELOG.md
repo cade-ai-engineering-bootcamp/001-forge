@@ -44,5 +44,7 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
   non-root execution, runtime contents, and security controls.
 - Least-privilege GitHub Actions workflow shell with immutable action pinning,
   protected triggers, bounded execution, and credential-safe checkout.
+- Frozen CI environment synchronization using pinned uv and Python versions
+  with a lockfile-driven, automatically protected uv artifact cache.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

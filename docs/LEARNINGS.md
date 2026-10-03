@@ -858,3 +858,43 @@ capacity.
 - Disable persisted checkout credentials for read-only jobs.
 - Use fixed runner labels, timeouts, and concurrency controls.
 - Review action upgrades as dependency changes.
+
+## Frozen CI Environments and Safe Dependency Caching
+
+### Simple Explanation
+
+The lockfile is a shopping list with exact items. CI follows that list without
+changing it, while its cache is only a pantry of reusable packages that can be
+thrown away and rebuilt at any time.
+
+### Why It Exists
+
+Using the latest available tools or allowing CI to rewrite dependency choices
+can make a passing job impossible to reproduce. Caching a whole virtual
+environment creates another hidden source of truth. Frozen synchronization
+keeps correctness in versioned files while an artifact cache improves speed.
+
+### Professional Use
+
+Teams pin runtimes and package managers, install from committed lockfiles, and
+cache downloadable or buildable artifacts using keys derived from dependency
+inputs. CI environments themselves remain ephemeral and reconstructible.
+
+### Common Mistakes
+
+- Installing whichever Python or package-manager version is newest
+- Updating the lockfile inside a verification job
+- Treating a restored virtual environment as the source of truth
+- Using cache keys unrelated to dependency inputs
+- Assuming a cache hit proves the environment is correct
+- Making builds fail merely because a disposable cache is missing
+
+### Best Practices
+
+- Pin the interpreter and dependency-management tool.
+- Commit the lockfile and synchronize it in frozen mode.
+- Cache artifacts rather than complete environments.
+- Derive cache invalidation from the lockfile.
+- Keep cache behavior aware of sensitive workflow event types.
+- Prune CI caches before saving when supported.
+- Design every job to succeed from an empty cache.

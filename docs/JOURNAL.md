@@ -887,3 +887,41 @@ or quality commands.
 
 Review Feature 7.2 — Add frozen dependency synchronization and safe caching.
 Do not begin Feature 7.2 without separate approval.
+
+## 2026-10-02 — Feature 7.2: Frozen CI Synchronization and Safe Caching
+
+### Session Goal
+
+Reproduce Forge's pinned development environment in CI while caching only
+disposable uv artifacts.
+
+### Work Completed
+
+- Added `astral-sh/setup-uv` v10.2.0 at its full commit SHA.
+- Configured CI to use uv 0.12.3 and managed Python 3.14.7.
+- Enabled setup-uv's event-aware automatic cache behavior.
+- Made `uv.lock` the dependency input for cache invalidation.
+- Enabled CI-oriented cache pruning before save.
+- Added frozen synchronization through `uv sync --frozen`.
+- Recorded the reproducibility and caching decision.
+
+### Validation Performed
+
+- Confirmed the workflow file parses as YAML.
+- Confirmed every external action reference is a 40-character commit SHA.
+- Confirmed the setup action and installed tool versions are explicit.
+- Confirmed the cache follows `uv.lock` and does not persist `.venv`.
+- Confirmed dependency synchronization uses `--frozen`.
+- Confirmed existing local quality gates and the whitespace check pass.
+
+### Scope Notes
+
+- No source, tests, dependencies, lockfile, containers, or README were changed.
+- No formatting, linting, typing, test, coverage, or deployment command was
+  added to the workflow.
+- The real GitHub cache and synchronization run will be verified after push.
+
+### Next Starting Point
+
+Review Feature 7.3 — Run formatting, linting, typing, tests, and coverage in CI.
+Do not begin Feature 7.3 without separate approval.

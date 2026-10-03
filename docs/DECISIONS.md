@@ -548,3 +548,42 @@ workflow and Git reference.
 - Future actions must declare and justify any additional permissions.
 - Action upgrades require an explicit review and SHA change.
 - Superseded work is canceled and stalled jobs cannot run indefinitely.
+
+## Decision 017 — Reproduce CI Environments from Locked Inputs
+
+- **Status:** Accepted
+- **Date:** 2026-10-02
+
+### Context
+
+CI must reproduce the environment developers verified locally without silently
+selecting newer Python, uv, or package versions. Repeatedly downloading the same
+artifacts wastes time, but restoring an entire virtual environment would make
+job state less transparent and less portable.
+
+### Decision
+
+Use the official `astral-sh/setup-uv` action pinned to the full commit SHA for
+v10.2.0. Configure it to install uv 0.12.3 and managed Python 3.14.7. Cache uv's
+disposable download and build artifacts using `uv.lock` as the dependency input,
+retain the action's event-aware automatic cache protection, and prune the cache
+for CI before saving. Recreate `.venv` on each runner with `uv sync --frozen`.
+
+### Alternatives Considered
+
+- Install the latest available uv and Python releases on every run.
+- Let `uv sync` update the lockfile during CI.
+- Cache and restore the complete `.venv` directory.
+- Maintain a separate cache action and manual cache key.
+- Disable caching entirely.
+
+### Consequences
+
+- Local and CI environments use the same pinned interpreter, package manager,
+  and locked dependencies.
+- CI cannot rewrite the dependency lockfile.
+- Cache invalidation follows changes to `uv.lock` and setup-uv's platform and
+  Python inputs.
+- Every job constructs its environment rather than trusting a saved `.venv`.
+- Cache contents remain disposable performance data, not a correctness input.
+- Python, uv, and setup-uv upgrades require explicit review.
