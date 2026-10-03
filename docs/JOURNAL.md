@@ -949,13 +949,16 @@ that developers run locally.
 - Confirmed Black, Ruff, MyPy, Pytest, and the coverage gate pass locally.
 - Confirmed the whitespace and scope checks pass.
 
-### Pending Acceptance Evidence
+### Hosted Acceptance Evidence
 
-- Push the completed Step 7 branch and open its pull request.
-- Confirm GitHub starts the workflow for the pull request.
-- Confirm environment setup, caching, and all four quality steps pass.
-- Record the successful GitHub run before declaring Feature 7.3 and Step 7
-  complete.
+- Opened pull request #8 from `feature/step-7-continuous-integration` into
+  `main`.
+- Confirmed GitHub triggered the workflow with the `pull_request` event.
+- Confirmed checkout, uv and Python setup, frozen synchronization, Black, Ruff,
+  MyPy, Pytest with coverage, and post-job cache handling all passed.
+- Confirmed the `Quality` job completed successfully for commit
+  `0bcc14817e0673ae79443b66fa83355dfd10d382`.
+- Recorded hosted run `37085328321` as the acceptance evidence for Step 7.
 
 ### Scope Notes
 
@@ -966,5 +969,5 @@ that developers run locally.
 
 ### Next Starting Point
 
-Commit and push Feature 7.3, open the Step 7 pull request, and verify its real
-GitHub Actions run. Do not begin Step 8 without separate approval.
+Commit and push the hosted-validation record, confirm the final CI rerun, then
+squash and merge pull request #8. Do not begin Step 8 without separate approval.
