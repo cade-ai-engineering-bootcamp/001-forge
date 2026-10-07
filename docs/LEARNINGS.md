@@ -935,3 +935,129 @@ while developers can copy the same command into their terminal.
 - Stop on the first failing command and preserve its output.
 - Reproduce failures from a frozen environment.
 - Require hosted-run evidence before declaring CI complete.
+
+## Task-Oriented Operational Documentation
+
+### Simple Explanation
+
+Good documentation is a map for someone who was not in the room when the
+project was built. It tells them what they need, what to type, what success
+looks like, and what to check when something goes wrong.
+
+### Why It Exists
+
+Code can be correct while the project remains unusable. Missing prerequisites,
+unstated expected results, and vague troubleshooting force users to reverse-
+engineer decisions that the repository already knows.
+
+### Professional Use
+
+Teams organize operating guides around user tasks: install, configure, run,
+test, observe, stop, and diagnose. Commands are copied from the real workflow,
+claims are tied to evidence, and incomplete future work is not presented as a
+current capability.
+
+### Common Mistakes
+
+- Listing commands without prerequisites or expected results
+- Requiring environment activation when the package tool can run commands
+  directly
+- Mixing focused tests with the authoritative coverage gate
+- Describing intended configuration values instead of implemented values
+- Offering generic troubleshooting that cannot be acted on
+- Claiming portability or setup speed before testing it
+- Letting the repository map drift behind the actual tree
+
+### Best Practices
+
+- Lead with the shortest verified path to a successful result.
+- Separate required tools from feature-specific tools.
+- Explain how to stop and clean up long-running resources.
+- Keep local and CI commands identical.
+- State expected outputs and accepted configuration values.
+- Connect common symptoms to concrete diagnostic commands.
+- Audit documentation against code and configuration before publishing it.
+
+## Architecture Documentation and Decision Audits
+
+### Simple Explanation
+
+An architecture overview is a map of the system today. A decision record is the
+notes explaining why the builders chose those roads instead of other roads.
+
+### Why It Exists
+
+Source files reveal implementation details one at a time, but they do not show
+the system boundary, dependency direction, execution environments, or intended
+extension points. Decision records preserve tradeoffs that code alone cannot
+explain.
+
+### Professional Use
+
+Teams document current structure separately from historical decisions. They
+audit both against implementation, link each decision for navigation, correct
+factual errors transparently, and add superseding records when direction
+changes.
+
+### Common Mistakes
+
+- Documenting an aspirational architecture as though it already exists
+- Listing components without showing dependency direction
+- Hiding operational and security boundaries from the architecture view
+- Rewriting old tradeoffs when a decision changes
+- Adding an ADR for every minor edit
+- Repeating an incorrect tool claim across multiple documents
+- Mixing current limitations with promised future capabilities
+
+### Best Practices
+
+- Start with purpose, scope, and explicit exclusions.
+- Map modules to one clear responsibility each.
+- Document startup, request, failure, and deployment flows.
+- Connect validation layers to what they prove and cannot prove.
+- Treat security controls and limitations as first-class architecture.
+- Index ADRs and keep their status visible.
+- Verify factual tool semantics against primary documentation.
+
+## Clean-Room Reuse Validation
+
+### Simple Explanation
+
+A clean-room trial pretends the project has arrived on a new desk. Old virtual
+environments, Git history, secret files, and generated caches are removed so
+the instructions—not hidden leftovers—must make the project work.
+
+### Why It Exists
+
+Passing checks in the original workspace can hide undeclared dependencies and
+stale state. A timed isolated trial turns “easy to reuse” from an opinion into a
+measured claim with visible conditions and limitations.
+
+### Professional Use
+
+Teams validate templates and starter kits from committed snapshots in temporary
+directories. They define a milestone, measure wall-clock time, use isolated
+dependency state, run the documented acceptance path, record environmental
+advantages, and delete temporary resources afterward.
+
+### Common Mistakes
+
+- Copying the existing `.venv` into the trial
+- Including uncommitted files that users cannot obtain
+- Calling a warm dependency cache a cold install
+- Reporting summed command time as though it were end-to-end elapsed time
+- Ignoring Git-history dependence
+- Hiding friction or workarounds from the final report
+- Claiming one host proves universal portability or timing
+- Leaving temporary directories, containers, or networks behind
+
+### Best Practices
+
+- Export only committed files into a unique temporary path.
+- Verify forbidden local state is absent before starting.
+- Define the timed success milestone before running the trial.
+- Record both wall-clock and important command-level timings.
+- Separate prerequisite caches from deliberately isolated caches.
+- Continue beyond startup through quality and container checks.
+- State exactly what the evidence proves and does not prove.
+- Clean up explicit temporary targets and verify their removal.

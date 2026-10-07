@@ -4,6 +4,33 @@ This document records decisions that materially affect Forge's architecture,
 tooling, security, maintainability, or workflow. Each record explains the
 context, alternatives, decision, and consequences.
 
+## Decision Index
+
+| ID | Decision | Status |
+| --- | --- | --- |
+| [001](#decision-001) | Separate the repository identifier from the product name | Accepted |
+| [002](#decision-002) | Use a small modular monolith | Accepted |
+| [003](#decision-003) | Use uv and a locked Python 3.14 environment | Accepted |
+| [004](#decision-004) | Separate application errors from FastAPI | Accepted |
+| [005](#decision-005) | Give Ruff and Black different responsibilities | Accepted |
+| [006](#decision-006) | Enforce feature-level scope control | Accepted |
+| [007](#decision-007) | Type-check production source strictly | Accepted |
+| [008](#decision-008) | Load typed settings without global state | Accepted |
+| [009](#decision-009) | Configure only the Forge logger namespace | Accepted |
+| [010](#decision-010) | Redact sensitive log fields before rendering | Accepted |
+| [011](#decision-011) | Separate fixed public errors from internal diagnostics | Accepted |
+| [012](#decision-012) | Separate application construction from the runtime module | Accepted |
+| [013](#decision-013) | Translate errors only at the HTTP boundary | Accepted |
+| [014](#decision-014) | Build a minimal non-root runtime image | Accepted |
+| [015](#decision-015) | Keep local Compose execution immutable and least-privilege | Accepted |
+| [016](#decision-016) | Run CI with least privilege and immutable action references | Accepted |
+| [017](#decision-017) | Reproduce CI environments from locked inputs | Accepted |
+
+Accepted decisions describe the current implementation. A future reversal
+should add a superseding record rather than erase the original context and
+tradeoffs.
+
+<a id="decision-001"></a>
 ## Decision 001 — Separate the Repository Identifier from the Product Name
 
 - **Status:** Accepted
@@ -32,6 +59,7 @@ Python distribution name and `forge` as the import-package name.
 - Packaging configuration must explicitly map the distribution to the shorter
   import-package name.
 
+<a id="decision-002"></a>
 ## Decision 002 — Use a Small Modular Monolith
 
 - **Status:** Accepted
@@ -61,6 +89,7 @@ configuration, logging, errors, and the HTTP boundary.
 - A future project may extract a service only when real operational needs
   justify it.
 
+<a id="decision-003"></a>
 ## Decision 003 — Use uv and a Locked Python 3.14 Environment
 
 - **Status:** Accepted
@@ -88,10 +117,13 @@ Use uv 0.12.3, Python 3.14.7, compatible dependency constraints in
 
 - One tool manages Python, `.venv`, dependency resolution, locking, and command
   execution.
-- `uv sync --frozen` can detect lockfile drift.
+- `uv sync --frozen` installs from `uv.lock` without updating it or checking
+  whether it reflects newer dependency edits in `pyproject.toml`.
+- `uv lock --check` is required when lockfile freshness must be asserted.
 - Contributors must install a compatible uv version.
 - Version upgrades must deliberately update both metadata and the lockfile.
 
+<a id="decision-004"></a>
 ## Decision 004 — Separate Application Errors from FastAPI
 
 - **Status:** Accepted
@@ -119,6 +151,7 @@ HTTP responses only at the FastAPI boundary.
 - The API adapter owns status-code and response-shape decisions.
 - Tests must cover both error behavior and HTTP translation.
 
+<a id="decision-005"></a>
 ## Decision 005 — Give Ruff and Black Different Responsibilities
 
 - **Status:** Accepted
@@ -150,6 +183,7 @@ and enforce the versions declared in the project environment.
   not rewrite every long string or comment.
 - Configuration tests and CI must prevent the tools from disagreeing.
 
+<a id="decision-006"></a>
 ## Decision 006 — Enforce Feature-Level Scope Control
 
 - **Status:** Accepted
@@ -177,6 +211,7 @@ boundary even when time remains.
 - Each design decision receives deliberate review.
 - Progress may feel slower, but comprehension and maintainability improve.
 
+<a id="decision-007"></a>
 ## Decision 007 — Type-Check Production Source Strictly
 
 - **Status:** Accepted
@@ -210,6 +245,7 @@ specific evidence-backed incompatibilities.
 - Tests remain outside the current MyPy target unless a later need justifies
   expanding it.
 
+<a id="decision-008"></a>
 ## Decision 008 — Load Typed Settings Without Global State
 
 - **Status:** Accepted
@@ -245,6 +281,7 @@ Let process environment variables take precedence over dotenv values.
   lifetime of the returned object.
 - Secret access remains explicit, and standard representations stay masked.
 
+<a id="decision-009"></a>
 ## Decision 009 — Configure Only the Forge Logger Namespace
 
 - **Status:** Accepted
@@ -282,6 +319,7 @@ each configuration call and leave the root logger untouched.
 - Uvicorn and other framework logging remain separate until an application
   boundary explicitly integrates them.
 
+<a id="decision-010"></a>
 ## Decision 010 — Redact Sensitive Log Fields Before Rendering
 
 - **Status:** Accepted
@@ -320,6 +358,7 @@ standard-library `extra` fields.
   prohibited by documented usage rules.
 - New credential field names must be added deliberately as the system evolves.
 
+<a id="decision-011"></a>
 ## Decision 011 — Separate Fixed Public Errors from Internal Diagnostics
 
 - **Status:** Accepted
@@ -359,6 +398,7 @@ causes. Leave HTTP translation to the API boundary.
 - Framework adapters must explicitly map error types to their own transport
   semantics.
 
+<a id="decision-012"></a>
 ## Decision 012 — Separate Application Construction from the Runtime Module
 
 - **Status:** Accepted
@@ -395,6 +435,7 @@ the application with package-derived metadata and debug mode disabled. Keep
   `app.state.settings`.
 - Routes and error translation remain independently reviewable features.
 
+<a id="decision-013"></a>
 ## Decision 013 — Translate Errors Only at the HTTP Boundary
 
 - **Status:** Accepted
@@ -433,6 +474,7 @@ data. Leave FastAPI's built-in validation and HTTP exception handling intact.
 - Integration tests create failing routes only on their local application
   instances; the production application still exposes only `/health`.
 
+<a id="decision-014"></a>
 ## Decision 014 — Build a Minimal Non-Root Runtime Image
 
 - **Status:** Accepted
@@ -473,6 +515,7 @@ and implement the image health check with Python's standard library.
 - The health check adds no operating-system package.
 - Base-image and uv tags must be updated deliberately during maintenance.
 
+<a id="decision-015"></a>
 ## Decision 015 — Keep Local Compose Execution Immutable and Least-Privilege
 
 - **Status:** Accepted
@@ -511,6 +554,7 @@ ephemeral `/tmp` filesystem. Do not mount source or pass an API key.
 - Source-editing workflows require a rebuild instead of live reload.
 - Secret delivery remains an explicit future-project responsibility.
 
+<a id="decision-016"></a>
 ## Decision 016 — Run CI with Least Privilege and Immutable Action References
 
 - **Status:** Accepted
@@ -549,6 +593,7 @@ workflow and Git reference.
 - Action upgrades require an explicit review and SHA change.
 - Superseded work is canceled and stalled jobs cannot run indefinitely.
 
+<a id="decision-017"></a>
 ## Decision 017 — Reproduce CI Environments from Locked Inputs
 
 - **Status:** Accepted

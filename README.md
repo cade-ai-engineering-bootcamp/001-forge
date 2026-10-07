@@ -35,11 +35,22 @@ sequence.
 
 ## Prerequisites
 
+For local Python development:
+
 - [Git](https://git-scm.com/)
 - [uv 0.12.3](https://docs.astral.sh/uv/)
+- `curl` for command-line health checks
 
 uv installs and selects the project's required Python 3.14.7 interpreter from
 the committed `.python-version` file.
+
+Container workflows additionally require:
+
+- Docker Engine 29.6-compatible, with Docker Compose
+- Bash and `curl` for `scripts/container_smoke_test.sh`
+
+The commands below use a POSIX-compatible shell. Container commands work with
+Docker Desktop or another compatible Docker Engine and Compose installation.
 
 ## Setup
 
@@ -56,30 +67,47 @@ Create the virtual environment and install the exact locked dependencies:
 uv sync --frozen
 ```
 
-Activate the environment in a POSIX-compatible shell:
+Verify the managed toolchain and installed package:
+
+```bash
+uv --version
+uv run python --version
+uv run python -c "import forge; print(forge.__file__)"
+```
+
+The expected tool versions are uv 0.12.3 and Python 3.14.7. The package path
+should end in `src/forge/__init__.py`, confirming the editable development
+install. Commands prefixed with `uv run` do not require manual activation.
+
+Optionally activate the environment when using `python` directly:
 
 ```bash
 source .venv/bin/activate
 ```
 
-Verify the managed toolchain:
-
-```bash
-uv --version
-python --version
-```
-
-Verify the installed package:
-
-```bash
-uv run python -c "import forge; print(forge.__file__)"
-```
-
-When finished, leave the virtual environment with:
+When finished, leave the activated environment with:
 
 ```bash
 deactivate
 ```
+
+## Quick Start
+
+Start Forge from the repository root:
+
+```bash
+uv run uvicorn forge.main:app --reload
+```
+
+In a second terminal, call the liveness endpoint:
+
+```bash
+curl --fail --silent http://127.0.0.1:8000/health
+```
+
+The expected response is `{"status":"ok"}`. Return to the server terminal and
+press `Ctrl+C` to stop it. Forge uses safe development defaults when no `.env`
+file exists.
 
 ## Environment Configuration
 
@@ -92,8 +120,8 @@ cp .env.example .env
 
 | Variable | Purpose |
 | --- | --- |
-| `FORGE_ENVIRONMENT` | Runtime environment; planned values are `development`, `test`, and `production`. |
-| `FORGE_LOG_LEVEL` | Minimum logging level. |
+| `FORGE_ENVIRONMENT` | Runtime environment: `development`, `test`, or `production`. |
+| `FORGE_LOG_LEVEL` | Minimum level: `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL`. |
 | `FORGE_LOG_JSON` | Selects JSON logs when `true` and human-readable logs when `false`. |
 | `FORGE_API_KEY` | Optional secret used to demonstrate secret-safe configuration handling. |
 
@@ -240,6 +268,13 @@ business routes.
 
 ## Container Image
 
+Confirm Docker and Compose are available before using the container workflows:
+
+```bash
+docker info
+docker compose version
+```
+
 Build the production image from the repository root:
 
 ```bash
@@ -324,7 +359,16 @@ runtime settings, non-root identity, filesystem restrictions, image contents,
 and Linux security controls, then removes its temporary container and network.
 If a check fails, it prints the service logs before cleanup and exits nonzero.
 
-## Local Quality Checks
+## Testing and Local Quality Checks
+
+Tests are split by responsibility:
+
+- `tests/unit/` checks individual Forge modules in isolation.
+- `tests/integration/` checks the FastAPI application through real HTTP
+  requests against an in-process test application.
+
+Run every quality command below before committing. The complete Pytest run is
+the authoritative test result because it enforces project-wide coverage.
 
 Verify that Python files match Black's formatting rules:
 
@@ -350,6 +394,16 @@ Run the test suite with branch coverage and the 90% coverage gate:
 uv run pytest
 ```
 
+For focused diagnosis, run one test group without applying the project-wide
+coverage threshold to that partial run:
+
+```bash
+uv run pytest tests/unit --no-cov
+uv run pytest tests/integration --no-cov
+```
+
+Focused runs do not replace the complete `uv run pytest` gate.
+
 Black is the project's only formatter. Ruff is intentionally limited to
 linting and import rules so the tools do not compete to rewrite the same code.
 MyPy analyzes type relationships without changing files or validating runtime
@@ -369,25 +423,101 @@ its displayed command from the repository root after running
 issue locally; do not weaken or skip the failing check. Push the correction to
 the same pull-request branch to start a new run.
 
+## Troubleshooting
+
+### uv or Python version mismatch
+
+Confirm `uv --version` reports 0.12.3. Install the project interpreter with
+`uv python install 3.14.7`, then rerun `uv sync --frozen`. Do not change
+`.python-version` or the required uv version merely to bypass a local mismatch.
+
+### Frozen synchronization fails
+
+Run `git status` and review changes to `pyproject.toml` and `uv.lock`. A frozen
+sync uses the existing lockfile without updating it and does not check whether
+it reflects newer dependency edits. Run `uv lock --check` when freshness must
+be verified. Dependency changes must deliberately update both project metadata
+and the committed lockfile; otherwise restore the intended committed inputs.
+
+### `forge` cannot be imported
+
+Run `uv sync --frozen`, then use `uv run python` or activate `.venv`. Running a
+different system Python will not necessarily see the installed Forge package.
+If `uv pip list` shows `forge-ai-starter-kit` but imports still fail on macOS,
+clear Finder's hidden flag from the environment and retry:
+
+```bash
+chflags -R nohidden .venv
+uv run python -c "import forge; print(forge.__file__)"
+```
+
+This changes only local filesystem metadata. Rerun it after synchronization if
+the hidden flag returns.
+
+### Configuration validation fails
+
+Compare `.env` with `.env.example`. Environment names are lowercase, log levels
+are uppercase, and `FORGE_LOG_JSON` must contain a recognized boolean value.
+Process environment variables override values from `.env`.
+
+### Port 8000 is already in use
+
+Stop the process or container currently using the port, or start a temporary
+local server on another port:
+
+```bash
+uv run uvicorn forge.main:app --reload --port 8001
+curl --fail --silent http://127.0.0.1:8001/health
+```
+
+### Docker is unavailable or Forge is unhealthy
+
+Run `docker info` to confirm the daemon is available and
+`docker compose version` to confirm Compose is installed. For a failed Compose
+startup, inspect `docker compose ps` and `docker compose logs api`, then run
+`docker compose down` before retrying. For the standalone `forge` container,
+use `docker logs forge` and remove an existing stopped container with
+`docker rm forge` before reusing that name.
+
+### A CI check fails
+
+Open the named failing step and run its exact command locally after
+`uv sync --frozen`. The [Continuous Integration](#continuous-integration)
+section lists CI behavior; do not skip or weaken a gate to obtain a green run.
+
 ## Repository Layout
 
 ```text
 .
-├── docs/               # Agenda, journal, decisions, and learning records
-├── scripts/            # Repeatable operational checks
+├── .github/
+│   └── workflows/
+│       └── ci.yml       # Hosted quality gates
+├── docs/
+│   ├── architecture/
+│   │   └── overview.md   # System structure, flows, boundaries, and limits
+│   ├── AGENDA.md         # Scope, sequence, and completion status
+│   ├── DECISIONS.md      # Architecture decision record
+│   ├── JOURNAL.md        # Chronological implementation evidence
+│   ├── LEARNINGS.md      # Concepts, mistakes, and best practices
+│   └── REUSE_VALIDATION.md  # Timed clean-room evidence
+├── scripts/
+│   └── container_smoke_test.sh  # Container acceptance check
 ├── src/
 │   └── forge/           # Installable Python import package
 ├── tests/
-│   └── unit/            # Fast, isolated package tests
-├── .env.example        # Safe environment-variable contract
-├── .dockerignore       # Allowlisted Docker build context
-├── .python-version     # Required Python interpreter version
-├── CHANGELOG.md        # Notable project changes
-├── compose.yaml        # Secure local service orchestration
-├── Dockerfile          # Multi-stage production container image
-├── LICENSE             # MIT license
-├── pyproject.toml      # Project metadata and dependency declarations
-└── uv.lock             # Exact resolved dependency graph
+│   ├── integration/     # HTTP boundary tests
+│   └── unit/            # Fast, isolated module tests
+├── .dockerignore        # Allowlisted Docker build context
+├── .env.example         # Safe environment-variable contract
+├── .gitignore           # Local and generated-file exclusions
+├── .python-version      # Required Python interpreter version
+├── CHANGELOG.md         # Notable project changes
+├── compose.yaml         # Secure local service orchestration
+├── Dockerfile           # Multi-stage production container image
+├── LICENSE              # MIT license
+├── pyproject.toml       # Metadata, dependencies, and tool configuration
+├── README.md            # Setup and operating guide
+└── uv.lock              # Exact resolved dependency graph
 ```
 
 `forge-ai-starter-kit` is the distribution name recorded in project metadata;
@@ -397,11 +527,22 @@ to be installed before it can be imported reliably.
 
 ## Project Documentation
 
+- [`docs/architecture/overview.md`](docs/architecture/overview.md) — system structure, boundaries, flows, and limitations
+- [`docs/REUSE_VALIDATION.md`](docs/REUSE_VALIDATION.md) — timed clean-room setup and validation evidence
 - [`docs/AGENDA.md`](docs/AGENDA.md) — scope, sequence, status, and acceptance criteria
 - [`docs/JOURNAL.md`](docs/JOURNAL.md) — chronological work-session record
 - [`docs/DECISIONS.md`](docs/DECISIONS.md) — architectural decision record
 - [`docs/LEARNINGS.md`](docs/LEARNINGS.md) — engineering concepts and lessons
 - [`CHANGELOG.md`](CHANGELOG.md) — user-visible project changes
+
+## Reuse Validation
+
+A clean committed snapshot on macOS arm64 reached a healthy application and an
+independent Git repository in **1 minute 58 seconds**. The complete local and
+container validation finished in **3 minutes 34 seconds**. See the
+[clean-room report](docs/REUSE_VALIDATION.md) for the method, cache conditions,
+friction, limitations, and cleanup evidence. These measured results are not a
+guarantee for every machine or network.
 
 ## License
 
