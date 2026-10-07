@@ -971,3 +971,50 @@ that developers run locally.
 
 Commit and push the hosted-validation record, confirm the final CI rerun, then
 squash and merge pull request #8. Do not begin Step 8 without separate approval.
+
+## 2026-10-07 — Feature 8.1: Operator Documentation
+
+### Session Goal
+
+Make the README sufficient for a new user to install, configure, run, test,
+containerize, diagnose, and navigate Forge without mentor assistance.
+
+### Work Completed
+
+- Split core and container-specific prerequisites.
+- Clarified non-activated `uv run` use and optional environment activation.
+- Added a minimal quick start with the expected health response and shutdown.
+- Corrected the implemented environment and log-level value contracts.
+- Documented unit and integration test responsibilities and focused runs.
+- Added Docker availability checks and preserved secure lifecycle guidance.
+- Added targeted troubleshooting for tool versions, frozen synchronization,
+  imports, configuration, ports, Docker, service health, and CI.
+- Documented the verified macOS hidden-flag remedy for an installed editable
+  package that Python cannot import.
+- Expanded the repository tree to cover every current major file and directory.
+
+### Validation Performed
+
+- Checked documented settings against `src/forge/config.py`.
+- Checked application and health commands against the FastAPI entry point.
+- Checked test paths and commands against the actual test layout and Pytest
+  configuration.
+- Checked image and Compose commands against the container definitions.
+- Executed the documented frozen sync, import, focused-test, and full local
+  quality commands successfully.
+- Reproduced the local hidden-flag import failure and verified that clearing
+  `.venv` flags restores the editable package path.
+- Confirmed the documentation links, whitespace check, and scope audit pass.
+
+### Scope Notes
+
+- No source, test, dependency, lockfile, container, workflow, or architecture
+  documentation was changed.
+- The clean-room timing trial remains Feature 8.3 and no reuse-time claim was
+  made.
+- Feature 8.2 remains unapproved and has not started.
+
+### Next Starting Point
+
+Review Feature 8.2 — Complete the architecture overview and decision records.
+Do not begin Feature 8.2 without separate approval.

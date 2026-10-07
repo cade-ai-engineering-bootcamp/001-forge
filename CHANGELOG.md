@@ -49,5 +49,7 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
 - Continuous integration checks for formatting, linting, static typing, tests,
   and enforced branch-coverage thresholds, with status and troubleshooting
   documentation.
+- Complete operator-facing setup, quick-start, configuration, testing,
+  container, CI, troubleshooting, and repository-layout documentation.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main
