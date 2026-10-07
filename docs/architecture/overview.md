@@ -195,7 +195,8 @@ capabilities it does not yet have.
   performs that freshness check.
 - The macOS editable-install hidden-flag workaround is operational guidance, not
   a cross-platform guarantee.
-- Reuse speed and clean-room portability remain unproven until Feature 8.3.
+- Clean-room reuse was measured on one macOS arm64 host; the result does not
+  establish identical timing or behavior on every platform and network.
 
 ## Decision Record
 

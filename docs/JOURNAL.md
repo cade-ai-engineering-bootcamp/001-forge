@@ -1059,3 +1059,58 @@ tradeoffs without inventing abstractions or capabilities that do not exist.
 
 Review Feature 8.3 — Conduct and time a clean-room reuse trial in a temporary
 copy. Do not begin Feature 8.3 without separate approval.
+
+## 2026-10-07 — Feature 8.3: Timed Clean-Room Reuse Trial
+
+### Session Goal
+
+Prove from committed files that Forge can become a healthy, independently
+versioned project in under 10 minutes and pass every documented local and
+container check.
+
+### Work Completed
+
+- Exported commit `99427cc045662d01258b3d88e56307d7009063a8` into a uniquely
+  named temporary directory without Git history or generated state.
+- Used a new empty uv package cache and created a fresh project `.venv`.
+- Verified Python 3.14.7, the editable Forge import, Uvicorn startup, the exact
+  health response, and clean shutdown.
+- Initialized an independent Git repository on `main` with no commits.
+- Ran Black, Ruff, MyPy, focused unit and integration tests, the complete test
+  and coverage gate, and the container smoke test.
+- Added `docs/REUSE_VALIDATION.md` with method, timing, results, friction,
+  limitations, and cleanup evidence.
+- Removed the exact temporary directory, uv cache, container, and network.
+
+### Measured Results
+
+- Derivative-ready milestone: 118 seconds (1 minute 58 seconds).
+- Complete validation through container cleanup: 214 seconds (3 minutes 34
+  seconds); temporary-directory deletion followed immediately afterward.
+- Empty-cache dependency synchronization: 1.53 seconds for 36 packages.
+- Focused tests: 37 unit and 6 integration tests passed.
+- Complete test suite: 43 tests passed with 100% coverage.
+- Container smoke test: 13.32 seconds and all assertions passed.
+
+### Friction and Limits
+
+- The optional browser-verification CLI was unavailable; the documented `curl`
+  request and Uvicorn's HTTP 200 access log supplied API evidence.
+- The host already contained uv, managed Python 3.14.7, and Docker layers.
+- The isolated uv package cache began empty.
+- The macOS hidden-flag import issue did not occur in the temporary directory.
+- The trial covered one macOS arm64 host and does not imply universal timing.
+- Automated project renaming remains deliberately deferred.
+
+### Scope Notes
+
+- No source, tests, dependencies, lockfile, container definitions, workflow, or
+  original Git history were changed.
+- The reusable `forge:local` image remains available for inspection.
+- Step 9 remains unapproved and has not started.
+
+### Next Starting Point
+
+Review Feature 9.1 — Run the complete functional and quality validation suite.
+Create the Step 9 branch only after Step 8 is reviewed and merged. Do not begin
+Feature 9.1 without separate approval.

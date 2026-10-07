@@ -54,5 +54,7 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
 - Architecture overview covering module dependencies, runtime flows, execution
   environments, validation layers, security properties, extension points, and
   current limitations, plus an indexed and audited decision record.
+- Timed clean-room reuse evidence demonstrating a healthy independent project
+  in under 10 minutes, followed by complete local and container validation.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 87% (27 of 31 features complete)
-- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions; Step 5 — FastAPI-Ready Application Boundary; Step 6 — Containerization; Step 7 — Continuous Integration
-- **Current step:** Step 8 — Documentation and Reuse Validation
-- **Current feature:** Feature 8.3 — Conduct and time a clean-room reuse trial in a temporary copy
-- **Estimated remaining focused time:** Approximately 1 hour
+- **Overall progress:** 90% (28 of 31 features complete)
+- **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions; Step 5 — FastAPI-Ready Application Boundary; Step 6 — Containerization; Step 7 — Continuous Integration; Step 8 — Documentation and Reuse Validation
+- **Current step:** Step 9 — Graduation Review
+- **Current feature:** Feature 9.1 — Run the complete functional and quality validation suite
+- **Estimated remaining focused time:** Approximately 45 minutes
 
 ## Completed Work
 
@@ -54,12 +54,13 @@ specific AI or business logic.
 - [x] Passed the hosted CI formatting, linting, typing, test, and coverage gates.
 - [x] Completed the operator-facing README and troubleshooting guide.
 - [x] Completed the architecture overview and audited all decision records.
+- [x] Passed a timed clean-room reuse trial in 1 minute 58 seconds.
 
 ## Remaining Work
 
-- [ ] Complete Steps 8–9 and the graduation review.
+- [ ] Complete Step 9 and the graduation review.
 - [ ] Verify all local, container, and CI quality gates.
-- [ ] Demonstrate that a new project can start from Forge in under 10 minutes.
+- [x] Demonstrate that a new project can start from Forge in under 10 minutes.
 
 ## Scope-Control Rules
 
@@ -680,7 +681,7 @@ A starter kit fails if only its author knows how to operate or adapt it.
 
 - [x] **8.1** Complete setup, usage, testing, container, and troubleshooting documentation.
 - [x] **8.2** Complete the architecture overview and decision records.
-- [ ] **8.3** Conduct and time a clean-room reuse trial in a temporary copy.
+- [x] **8.3** Conduct and time a clean-room reuse trial in a temporary copy.
 
 ### Learning Objectives
 

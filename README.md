@@ -498,7 +498,8 @@ section lists CI behavior; do not skip or weaken a gate to obtain a green run.
 │   ├── AGENDA.md         # Scope, sequence, and completion status
 │   ├── DECISIONS.md      # Architecture decision record
 │   ├── JOURNAL.md        # Chronological implementation evidence
-│   └── LEARNINGS.md      # Concepts, mistakes, and best practices
+│   ├── LEARNINGS.md      # Concepts, mistakes, and best practices
+│   └── REUSE_VALIDATION.md  # Timed clean-room evidence
 ├── scripts/
 │   └── container_smoke_test.sh  # Container acceptance check
 ├── src/
@@ -527,11 +528,21 @@ to be installed before it can be imported reliably.
 ## Project Documentation
 
 - [`docs/architecture/overview.md`](docs/architecture/overview.md) — system structure, boundaries, flows, and limitations
+- [`docs/REUSE_VALIDATION.md`](docs/REUSE_VALIDATION.md) — timed clean-room setup and validation evidence
 - [`docs/AGENDA.md`](docs/AGENDA.md) — scope, sequence, status, and acceptance criteria
 - [`docs/JOURNAL.md`](docs/JOURNAL.md) — chronological work-session record
 - [`docs/DECISIONS.md`](docs/DECISIONS.md) — architectural decision record
 - [`docs/LEARNINGS.md`](docs/LEARNINGS.md) — engineering concepts and lessons
 - [`CHANGELOG.md`](CHANGELOG.md) — user-visible project changes
+
+## Reuse Validation
+
+A clean committed snapshot on macOS arm64 reached a healthy application and an
+independent Git repository in **1 minute 58 seconds**. The complete local and
+container validation finished in **3 minutes 34 seconds**. See the
+[clean-room report](docs/REUSE_VALIDATION.md) for the method, cache conditions,
+friction, limitations, and cleanup evidence. These measured results are not a
+guarantee for every machine or network.
 
 ## License
 

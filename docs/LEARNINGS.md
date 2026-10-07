@@ -1018,3 +1018,46 @@ changes.
 - Treat security controls and limitations as first-class architecture.
 - Index ADRs and keep their status visible.
 - Verify factual tool semantics against primary documentation.
+
+## Clean-Room Reuse Validation
+
+### Simple Explanation
+
+A clean-room trial pretends the project has arrived on a new desk. Old virtual
+environments, Git history, secret files, and generated caches are removed so
+the instructions—not hidden leftovers—must make the project work.
+
+### Why It Exists
+
+Passing checks in the original workspace can hide undeclared dependencies and
+stale state. A timed isolated trial turns “easy to reuse” from an opinion into a
+measured claim with visible conditions and limitations.
+
+### Professional Use
+
+Teams validate templates and starter kits from committed snapshots in temporary
+directories. They define a milestone, measure wall-clock time, use isolated
+dependency state, run the documented acceptance path, record environmental
+advantages, and delete temporary resources afterward.
+
+### Common Mistakes
+
+- Copying the existing `.venv` into the trial
+- Including uncommitted files that users cannot obtain
+- Calling a warm dependency cache a cold install
+- Reporting summed command time as though it were end-to-end elapsed time
+- Ignoring Git-history dependence
+- Hiding friction or workarounds from the final report
+- Claiming one host proves universal portability or timing
+- Leaving temporary directories, containers, or networks behind
+
+### Best Practices
+
+- Export only committed files into a unique temporary path.
+- Verify forbidden local state is absent before starting.
+- Define the timed success milestone before running the trial.
+- Record both wall-clock and important command-level timings.
+- Separate prerequisite caches from deliberately isolated caches.
+- Continue beyond startup through quality and container checks.
+- State exactly what the evidence proves and does not prove.
+- Clean up explicit temporary targets and verify their removal.
