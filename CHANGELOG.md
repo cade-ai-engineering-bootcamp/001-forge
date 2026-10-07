@@ -51,5 +51,8 @@ and this project intends to follow [Semantic Versioning](https://semver.org/).
   documentation.
 - Complete operator-facing setup, quick-start, configuration, testing,
   container, CI, troubleshooting, and repository-layout documentation.
+- Architecture overview covering module dependencies, runtime flows, execution
+  environments, validation layers, security properties, extension points, and
+  current limitations, plus an indexed and audited decision record.
 
 [Unreleased]: https://github.com/cade-ai-engineering-bootcamp/001-forge/commits/main

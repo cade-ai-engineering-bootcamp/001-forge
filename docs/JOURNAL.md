@@ -1018,3 +1018,44 @@ containerize, diagnose, and navigate Forge without mentor assistance.
 
 Review Feature 8.2 — Complete the architecture overview and decision records.
 Do not begin Feature 8.2 without separate approval.
+
+## 2026-10-07 — Feature 8.2: Architecture and Decision Record
+
+### Session Goal
+
+Explain Forge's implemented structure, boundaries, runtime behavior, and
+tradeoffs without inventing abstractions or capabilities that do not exist.
+
+### Work Completed
+
+- Created `docs/architecture/overview.md` as the system-level architecture map.
+- Documented scope, module dependencies, startup, health, and error flows.
+- Documented configuration, logging, packaging, execution, testing, security,
+  reliability, extension, and limitation boundaries.
+- Added a linked index for all 17 accepted architecture decisions.
+- Audited each decision against the current implementation.
+- Corrected Decision 003's frozen-sync consequence to distinguish immutable
+  lockfile use from lockfile-freshness validation.
+- Linked the overview from the README and expanded its documentation tree.
+
+### Validation Performed
+
+- Checked module relationships against imports in `src/forge`.
+- Checked runtime flows against the application factory and ASGI entry point.
+- Checked image, Compose, smoke-test, and CI claims against their definitions.
+- Confirmed all 17 ADR index entries resolve to explicit record anchors.
+- Confirmed local documentation links and Markdown structure pass validation.
+- Confirmed existing local quality gates and the whitespace check pass.
+
+### Scope Notes
+
+- No architecture, source, test, dependency, lockfile, container, or workflow
+  behavior was changed.
+- No new ADR was added because the feature introduced no new architectural
+  decision.
+- The timed clean-room reuse trial remains Feature 8.3.
+
+### Next Starting Point
+
+Review Feature 8.3 — Conduct and time a clean-room reuse trial in a temporary
+copy. Do not begin Feature 8.3 without separate approval.

@@ -16,11 +16,11 @@ specific AI or business logic.
 - **Estimated duration:** 1 week
 - **Estimated focused time:** 11–12 hours
 - **Estimated work sessions:** 6–7
-- **Overall progress:** 84% (26 of 31 features complete)
+- **Overall progress:** 87% (27 of 31 features complete)
 - **Completed steps:** Step 0 — Planning and Governance; Step 1 — Python Project Foundation; Step 2 — Local Quality and Test Harness; Step 3 — Typed Configuration and Secret Safety; Step 4 — Structured Logging and Error Conventions; Step 5 — FastAPI-Ready Application Boundary; Step 6 — Containerization; Step 7 — Continuous Integration
 - **Current step:** Step 8 — Documentation and Reuse Validation
-- **Current feature:** Feature 8.2 — Complete the architecture overview and decision records
-- **Estimated remaining focused time:** Approximately 1 hour 20 minutes
+- **Current feature:** Feature 8.3 — Conduct and time a clean-room reuse trial in a temporary copy
+- **Estimated remaining focused time:** Approximately 1 hour
 
 ## Completed Work
 
@@ -53,6 +53,7 @@ specific AI or business logic.
 - [x] Added frozen CI dependency synchronization and safe uv artifact caching.
 - [x] Passed the hosted CI formatting, linting, typing, test, and coverage gates.
 - [x] Completed the operator-facing README and troubleshooting guide.
+- [x] Completed the architecture overview and audited all decision records.
 
 ## Remaining Work
 
@@ -678,7 +679,7 @@ A starter kit fails if only its author knows how to operate or adapt it.
 ### Features
 
 - [x] **8.1** Complete setup, usage, testing, container, and troubleshooting documentation.
-- [ ] **8.2** Complete the architecture overview and decision records.
+- [x] **8.2** Complete the architecture overview and decision records.
 - [ ] **8.3** Conduct and time a clean-room reuse trial in a temporary copy.
 
 ### Learning Objectives

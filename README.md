@@ -434,9 +434,10 @@ Confirm `uv --version` reports 0.12.3. Install the project interpreter with
 ### Frozen synchronization fails
 
 Run `git status` and review changes to `pyproject.toml` and `uv.lock`. A frozen
-sync intentionally refuses to make dependency decisions during verification.
-Dependency changes must be deliberate and must update both project metadata and
-the committed lockfile; otherwise restore the intended committed inputs.
+sync uses the existing lockfile without updating it and does not check whether
+it reflects newer dependency edits. Run `uv lock --check` when freshness must
+be verified. Dependency changes must deliberately update both project metadata
+and the committed lockfile; otherwise restore the intended committed inputs.
 
 ### `forge` cannot be imported
 
@@ -491,7 +492,13 @@ section lists CI behavior; do not skip or weaken a gate to obtain a green run.
 ├── .github/
 │   └── workflows/
 │       └── ci.yml       # Hosted quality gates
-├── docs/                # Agenda, journal, decisions, and learning records
+├── docs/
+│   ├── architecture/
+│   │   └── overview.md   # System structure, flows, boundaries, and limits
+│   ├── AGENDA.md         # Scope, sequence, and completion status
+│   ├── DECISIONS.md      # Architecture decision record
+│   ├── JOURNAL.md        # Chronological implementation evidence
+│   └── LEARNINGS.md      # Concepts, mistakes, and best practices
 ├── scripts/
 │   └── container_smoke_test.sh  # Container acceptance check
 ├── src/
@@ -519,6 +526,7 @@ to be installed before it can be imported reliably.
 
 ## Project Documentation
 
+- [`docs/architecture/overview.md`](docs/architecture/overview.md) — system structure, boundaries, flows, and limitations
 - [`docs/AGENDA.md`](docs/AGENDA.md) — scope, sequence, status, and acceptance criteria
 - [`docs/JOURNAL.md`](docs/JOURNAL.md) — chronological work-session record
 - [`docs/DECISIONS.md`](docs/DECISIONS.md) — architectural decision record

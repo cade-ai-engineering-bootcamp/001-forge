@@ -977,3 +977,44 @@ current capability.
 - State expected outputs and accepted configuration values.
 - Connect common symptoms to concrete diagnostic commands.
 - Audit documentation against code and configuration before publishing it.
+
+## Architecture Documentation and Decision Audits
+
+### Simple Explanation
+
+An architecture overview is a map of the system today. A decision record is the
+notes explaining why the builders chose those roads instead of other roads.
+
+### Why It Exists
+
+Source files reveal implementation details one at a time, but they do not show
+the system boundary, dependency direction, execution environments, or intended
+extension points. Decision records preserve tradeoffs that code alone cannot
+explain.
+
+### Professional Use
+
+Teams document current structure separately from historical decisions. They
+audit both against implementation, link each decision for navigation, correct
+factual errors transparently, and add superseding records when direction
+changes.
+
+### Common Mistakes
+
+- Documenting an aspirational architecture as though it already exists
+- Listing components without showing dependency direction
+- Hiding operational and security boundaries from the architecture view
+- Rewriting old tradeoffs when a decision changes
+- Adding an ADR for every minor edit
+- Repeating an incorrect tool claim across multiple documents
+- Mixing current limitations with promised future capabilities
+
+### Best Practices
+
+- Start with purpose, scope, and explicit exclusions.
+- Map modules to one clear responsibility each.
+- Document startup, request, failure, and deployment flows.
+- Connect validation layers to what they prove and cannot prove.
+- Treat security controls and limitations as first-class architecture.
+- Index ADRs and keep their status visible.
+- Verify factual tool semantics against primary documentation.
